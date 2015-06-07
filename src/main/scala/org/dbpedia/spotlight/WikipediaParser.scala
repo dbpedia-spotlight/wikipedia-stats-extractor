@@ -1,23 +1,21 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/**
+ *  Copyright 2015 DBpedia Spotlight
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package org.dbpedia.spotlight
 
-import dbpedia.wikipedia.format.XmlInputFormat
+import org.dbpedia.wiki.format.XmlInputFormat
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.SparkContext
@@ -30,12 +28,12 @@ object WikipediaParser {
 
     val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.3.1-bin-hadoop2.4\\spark-1.3.1-bin-hadoop2.4\\bin")
 
-    val pageRDDs = readFile(inputWikiDump,sc).count()
+    //Read the Wikipedia XML Dump and store each page as XML as element of RDD
+    val pageRDDs = readFile(inputWikiDump,sc)
 
-    //Printing the count of total elements in RDD
-    println(pageRDDs)
-    //Printing individual RDDs
-    //pageRDDs.foreach(println)
+
+
+
 
 
 
@@ -46,7 +44,7 @@ object WikipediaParser {
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
                                       classOf[Text], conf)
-    rawXmls.map(p => p._1.toString)
+    rawXmls.map(p => p._2.toString)
   }
 
 }

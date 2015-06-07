@@ -13,6 +13,10 @@
       <name>Scala-Tools Maven2 Repository</name>
       <url>http://scala-tools.org/repo-releases</url>
     </repository>
+    <repository>
+         <id>jitpack.io</id>
+         <url>https://jitpack.io</url>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -45,6 +49,11 @@
           <groupId>org.apache.spark</groupId>
           <artifactId>spark-core_2.10</artifactId>
           <version>1.3.1</version>
+      </dependency>
+      <dependency>
+          <groupId>com.github.naveenmadhire</groupId>
+          <artifactId>json-wikipedia-dbspotlight</artifactId>
+          <version>c0b87b67db</version>
       </dependency>
   </dependencies>
 
