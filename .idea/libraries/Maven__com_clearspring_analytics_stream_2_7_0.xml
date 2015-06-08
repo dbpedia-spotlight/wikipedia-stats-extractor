@@ -2,6 +2,7 @@
   <library name="Maven: com.clearspring.analytics:stream:2.7.0">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/clearspring/analytics/stream/2.7.0/stream-2.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../json-wikipedia-dbspotlight/target/json-wikipedia-1.0.0-jar-with-dependencies.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$MAVEN_REPOSITORY$/com/clearspring/analytics/stream/2.7.0/stream-2.7.0-javadoc.jar!/" />

@@ -25,6 +25,9 @@
         <module name="wikipedia-stats-extractor" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="wikipedia-stats-extractor" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

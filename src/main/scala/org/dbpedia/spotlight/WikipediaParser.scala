@@ -24,18 +24,14 @@ import org.apache.spark.rdd.RDD
 object WikipediaParser {
 
   def main(args: Array[String]): Unit ={
-    val inputWikiDump = "E:\\ApacheSpark\\enwiki-pages-articles-sample.xml"
+    val inputWikiDump = "E:\\ApacheSpark\\enwiki-pages-articles-sample - Copy.xml"
 
     val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.3.1-bin-hadoop2.4\\spark-1.3.1-bin-hadoop2.4\\bin")
 
-    //Read the Wikipedia XML Dump and store each page as XML as element of RDD
+    //Read the Wikipedia XML Dump and store each page in JSON format as element of RDD
     val pageRDDs = readFile(inputWikiDump,sc)
 
-
-
-
-
-
+    pageRDDs.foreach(println)
 
   }
   def readFile(path: String, sc: SparkContext): RDD[String] = {

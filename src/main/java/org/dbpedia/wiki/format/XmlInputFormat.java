@@ -28,6 +28,7 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.dbpedia.spotlight.parser.JsonWikiParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +144,14 @@ public class XmlInputFormat extends TextInputFormat {
 
         @Override
         public Text getCurrentValue() throws IOException, InterruptedException {
-            return currentValue;
+            //return currentValue;
+            JsonWikiParser jsonWikiParser = new JsonWikiParser(currentValue.toString(), "en");
+            try {
+                return new Text(jsonWikiParser.jsonParser());
+            }
+            catch (Exception e){
+                return new Text(new String("Error Parsing Page Element"));
+            }
         }
 
         @Override
