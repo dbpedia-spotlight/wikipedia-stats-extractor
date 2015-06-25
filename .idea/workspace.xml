@@ -1,59 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f26943bb-31e6-48db-8df2-eaeb619b9d5f" name="Default" comment="Json Parser Changes">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tukaani_xz_1_0.xml" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__antlr_antlr_2_7_7.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__ch_qos_logback_logback_classic_1_0_12.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__ch_qos_logback_logback_core_1_0_12.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_fasterxml_classmate_0_5_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_github_naveenmadhire_json_wikipedia_dbspotlight_bliki_core_c0b87b67db.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_github_naveenmadhire_json_wikipedia_dbspotlight_c0b87b67db.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_github_naveenmadhire_json_wikipedia_dbspotlight_hpc_utils_c0b87b67db.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_github_naveenmadhire_json_wikipedia_dbspotlight_json_wikipedia_c0b87b67db.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_google_code_gson_gson_2_2_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__de_tudarmstadt_ukp_wikipedia_de_tudarmstadt_ukp_wikipedia_api_0_9_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__de_tudarmstadt_ukp_wikipedia_de_tudarmstadt_ukp_wikipedia_datamachine_0_9_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__de_tudarmstadt_ukp_wikipedia_de_tudarmstadt_ukp_wikipedia_mwdumper_0_9_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__de_tudarmstadt_ukp_wikipedia_de_tudarmstadt_ukp_wikipedia_revisionmachine_0_9_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__de_tudarmstadt_ukp_wikipedia_de_tudarmstadt_ukp_wikipedia_timemachine_0_9_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__de_tudarmstadt_ukp_wikipedia_de_tudarmstadt_ukp_wikipedia_wikimachine_0_9_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__dom4j_dom4j_1_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__info_bliki_wiki_bliki_core_3_0_16.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__javassist_javassist_3_9_0_GA.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__javax_activation_activation_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__javax_mail_mail_1_4_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__jfree_jcommon_1_0_15.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__jfree_jfreechart_1_0_12.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__mysql_mysql_connector_java_5_1_14.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__net_java_dev_swing_layout_swing_layout_1_0_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__net_sf_jopt_simple_jopt_simple_4_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__net_sf_trove4j_trove4j_2_0_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_ant_ant_1_8_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_ant_ant_launcher_1_8_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_lucene_lucene_core_4_3_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_hibernate_common_hibernate_commons_annotations_4_0_1_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_hibernate_hibernate_core_4_0_0_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_hibernate_javax_persistence_hibernate_jpa_2_0_api_1_0_1_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_jboss_jandex_1_0_3_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_jboss_logging_jboss_logging_3_1_0_CR2.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_jboss_spec_javax_transaction_jboss_transaction_api_1_1_spec_1_0_0_Final.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_jgrapht_jgrapht_jdk1_5_0_7_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_springframework_spring_asm_3_1_1_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_springframework_spring_beans_3_1_1_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_springframework_spring_core_3_1_1_RELEASE.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__xerces_xercesImpl_2_9_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__xml_apis_xml_apis_1_3_04.xml" afterPath="" />
+    <list default="true" id="f26943bb-31e6-48db-8df2-eaeb619b9d5f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_esotericsoftware_kryo_kryo_2_21.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_esotericsoftware_minlog_minlog_1_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_esotericsoftware_reflectasm_reflectasm_shaded_1_07.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_fasterxml_jackson_core_jackson_annotations_2_4_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_fasterxml_jackson_core_jackson_core_2_4_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_fasterxml_jackson_core_jackson_databind_2_4_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_fasterxml_jackson_module_jackson_module_scala_2_10_2_4_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_google_code_findbugs_jsr305_1_3_9.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_google_guava_guava_14_0_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_google_protobuf_protobuf_java_2_5_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_ning_compress_lzf_1_0_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_thoughtworks_paranamer_paranamer_2_6.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_twitter_chill_2_10_0_5_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_twitter_chill_java_0_5_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__com_typesafe_config_1_2_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_beanutils_commons_beanutils_1_7_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_beanutils_commons_beanutils_core_1_8_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_cli_commons_cli_1_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_codec_commons_codec_1_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_collections_commons_collections_3_2_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_configuration_commons_configuration_1_6.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_digester_commons_digester_1_8.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_httpclient_commons_httpclient_3_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_io_commons_io_2_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_lang_commons_lang_2_5.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_logging_commons_logging_1_1_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_net_commons_net_2_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__io_dropwizard_metrics_metrics_core_3_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__io_dropwizard_metrics_metrics_graphite_3_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__io_dropwizard_metrics_metrics_json_3_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__io_dropwizard_metrics_metrics_jvm_3_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__io_netty_netty_3_8_0_Final.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__io_netty_netty_all_4_0_23_Final.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__jline_jline_0_9_94.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__junit_junit_4_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__log4j_log4j_1_2_17.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__net_java_dev_jets3t_jets3t_0_7_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__net_jpountz_lz4_lz4_1_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__net_sf_py4j_py4j_0_8_2_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_avro_avro_1_7_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_commons_commons_compress_1_4_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_commons_commons_lang3_3_3_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_commons_commons_math3_3_1_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_commons_commons_math_2_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_curator_curator_client_2_4_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_curator_curator_framework_2_4_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_curator_curator_recipes_2_4_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_annotations_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_auth_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_client_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_common_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_hdfs_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_mapreduce_client_app_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_mapreduce_client_common_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_mapreduce_client_core_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_mapreduce_client_jobclient_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_mapreduce_client_shuffle_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_yarn_api_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_yarn_client_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_yarn_common_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_hadoop_hadoop_yarn_server_common_2_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_ivy_ivy_2_4_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_mesos_mesos_shaded_protobuf_0_21_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_spark_spark_network_common_2_10_1_3_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_spark_spark_network_shuffle_2_10_1_3_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_zookeeper_zookeeper_3_4_5.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_codehaus_jackson_jackson_core_asl_1_8_8.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_codehaus_jackson_jackson_mapper_asl_1_8_8.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_eclipse_jetty_orbit_javax_servlet_3_0_0_v201112011016.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_hamcrest_hamcrest_core_1_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_hamcrest_hamcrest_library_1_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_jmock_jmock_2_4_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_json4s_json4s_ast_2_10_3_2_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_json4s_json4s_core_2_10_3_2_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_json4s_json4s_jackson_2_10_3_2_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_mortbay_jetty_jetty_util_6_1_26.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_objenesis_objenesis_1_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_roaringbitmap_RoaringBitmap_0_4_5.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_scala_lang_scala_compiler_2_10_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_scala_lang_scala_library_2_10_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_scala_lang_scala_reflect_2_10_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_scala_lang_scalap_2_10_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_scalacheck_scalacheck_1_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_scalatest_scalatest_0_9_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_slf4j_jcl_over_slf4j_1_7_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_slf4j_jul_to_slf4j_1_7_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_slf4j_slf4j_api_1_7_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_slf4j_slf4j_log4j12_1_7_10.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_spark_project_akka_akka_actor_2_10_2_3_4_spark.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_spark_project_akka_akka_remote_2_10_2_3_4_spark.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_spark_project_akka_akka_slf4j_2_10_2_3_4_spark.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_spark_project_protobuf_protobuf_java_2_5_0_spark.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_spark_project_pyrolite_2_0_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_spark_project_spark_unused_1_0_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_specs_specs_1_2_5.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_tachyonproject_tachyon_0_5_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_tachyonproject_tachyon_client_0_5_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_tukaani_xz_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_uncommons_maths_uncommons_maths_1_2_2a.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_xerial_snappy_snappy_java_1_1_1_6.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__oro_oro_2_0_8.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__xmlenc_xmlenc_0_52.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_clearspring_analytics_stream_2_7_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_clearspring_analytics_stream_2_7_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala" afterPath="$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java" afterPath="$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wikipedia-stats-extractor.iml" afterPath="$PROJECT_DIR$/wikipedia-stats-extractor.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__commons_lang_commons_lang_3_0_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_5.xml" />
-      <change type="MOVED" beforePath="E:\My Masters Data Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_commons_commons_compress_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_compress_1_4_1.xml" />
+      <change type="MOVED" beforePath="E:\My_Masters_Data_Science\wikipedia-stats-extractor\.idea\libraries\Maven__org_apache_spark_spark_core_2_10_1_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_spark_spark_hive_2_10_1_3_1.xml" />
     </list>
     <ignored path="wikipedia-stats-extractor.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -75,20 +132,7 @@
     <favorites_list name="wikipedia-stats-extractor" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="XmlInputFormat.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5011287" vertical-offset="2022" max-vertical-offset="2601">
-              <caret line="152" column="32" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -105,9 +149,10 @@
         <option value="$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/App.scala" />
         <option value="$PROJECT_DIR$/src/main/java/dbpedia/wikipedia/format/XmlInputFormat.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/dbpedia/json/parser/JsonPediaParser.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -182,7 +227,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -190,15 +235,9 @@
               <option name="myItemId" value="wikipedia-stats-extractor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="wikipedia-stats-extractor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wikipedia-stats-extractor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -208,54 +247,12 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="wikipedia-stats-extractor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scala" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="spotlight" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wikipedia-stats-extractor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wikipedia-stats-extractor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="format" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -292,7 +289,7 @@
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.51332563" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../json-wikipedia-dbspotlight/target/json-wikipedia-1.0.0-jar-with-dependencies.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Json-wikipedia2/target/json-wikipedia-1.0.0-jar-with-dependencies.jar!/" />
   </component>
   <component name="RunManager" selected="Application.WikipediaParser">
     <configuration default="false" name="TestSpark" type="Application" factoryName="Application" temporary="true">
@@ -323,7 +320,13 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="wikipedia-stats-extractor" />
       <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -494,7 +497,11 @@
       <created>1433707712810</created>
       <updated>1433707712810</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Json Parser Changes">
+      <created>1433726692658</created>
+      <updated>1433726692658</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -507,20 +514,20 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3990307" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35541195" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901135" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22132471" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13501483" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37462908" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43249258" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21647818" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30118695" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29886913" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15993538" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -535,20 +542,20 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3990307" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35541195" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901135" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31118315" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15993538" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37462908" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13501483" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43249258" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30118695" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24394184" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11470113" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -579,6 +586,106 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1292">
+          <caret line="50" column="63" selection-start-line="50" selection-start-column="63" selection-end-line="50" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="102">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.10/1.3.1/spark-sql_2.10-1.3.1-sources.jar!/org/apache/spark/sql/DataFrame.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="12427" max-vertical-offset="22440">
+          <caret line="731" column="6" selection-start-line="731" selection-start-column="6" selection-end-line="731" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1156">
+          <caret line="45" column="36" selection-start-line="45" selection-start-column="14" selection-end-line="45" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1139">
+          <caret line="13" column="34" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="799">
+          <caret line="45" column="69" selection-start-line="45" selection-start-column="69" selection-end-line="45" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="2941">
+          <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="816" max-vertical-offset="2618">
+          <caret line="54" column="45" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1139">
+          <caret line="45" column="69" selection-start-line="45" selection-start-column="69" selection-end-line="45" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="2941">
+          <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="816" max-vertical-offset="2618">
+          <caret line="54" column="45" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2008" max-vertical-offset="2601">
+          <caret line="152" column="32" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2022" max-vertical-offset="2601">
+          <caret line="152" column="32" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1006" max-vertical-offset="2567">
@@ -591,9 +698,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="748" max-vertical-offset="2805">
           <caret line="44" column="4" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="4" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -638,13 +742,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
@@ -677,46 +781,331 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21024735" vertical-offset="0" max-vertical-offset="952">
           <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
         </state>
-      </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
       </provider>
     </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-common/2.2.0/hadoop-common-2.2.0-sources.jar!/org/apache/hadoop/fs/FSDataInputStream.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334" vertical-offset="279" max-vertical-offset="2550">
           <caret line="48" column="27" selection-start-line="48" selection-start-column="27" selection-end-line="48" selection-end-column="27" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://MAVEN/org.dbpedia.spotlight:wikipedia-stats-extractor:1.0-SNAPSHOT">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>MAVEN</ID>
+          <OriginalElement>org.dbpedia.spotlight:wikipedia-stats-extractor:1.0-SNAPSHOT</OriginalElement>
+          <nodes>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-json:jar:3.1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/commons-codec:commons-codec:jar:1.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.hadoop:hadoop-auth:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project:pyrolite:jar:2.0.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.commons:commons-lang3:jar:3.3.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.codehaus.jackson:jackson-core-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.clearspring.analytics:stream:jar:2.7.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly2:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/io.netty:netty:jar:3.8.0.Final</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.hadoop:hadoop-auth:jar:2.2.0/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/com.sun.jersey.contribs:jersey-guice:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.xerial.snappy:snappy-java:jar:1.1.1.6</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4/com.thoughtworks.paranamer:paranamer:jar:2.3</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/net.java.dev.jets3t:jets3t:jar:0.7.1/commons-httpclient:commons-httpclient:jar:3.1/commons-codec:commons-codec:jar:1.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/commons-io:commons-io:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4/org.codehaus.jackson:jackson-mapper-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-digester:commons-digester:jar:1.8/commons-beanutils:commons-beanutils:jar:1.7.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:jul-to-slf4j:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5/jline:jline:jar:0.9.94</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0/org.apache.curator:curator-client:jar:2.4.0/org.slf4j:slf4j-api:jar:1.6.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.google.code.findbugs:jsr305:jar:1.3.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-json:jar:3.1.0/io.dropwizard.metrics:metrics-core:jar:3.1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0/com.esotericsoftware.kryo:kryo:jar:2.21/org.objenesis:objenesis:jar:1.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0/com.fasterxml.jackson.core:jackson-databind:jar:2.3.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/org.scala-lang:scala-reflect:jar:2.10.4/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/oro:oro:jar:2.0.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.commons:commons-math3:jar:3.1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-json:jar:3.1.0/org.slf4j:slf4j-api:jar:1.7.7</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/org.codehaus.jackson:jackson-mapper-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5/log4j:log4j:jar:1.2.15</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill-java:jar:0.5.0/com.esotericsoftware.kryo:kryo:jar:2.21</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/com.thoughtworks.paranamer:paranamer:jar:2.6</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/org.apache.zookeeper:zookeeper:jar:3.4.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.spark:spark-network-common_2.10:jar:1.3.1/org.spark-project.spark:unused:jar:1.0.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-beanutils:commons-beanutils-core:jar:1.8.0/commons-logging:commons-logging:jar:1.1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-slf4j_2.10:jar:2.3.4-spark/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/com.fasterxml.jackson.core:jackson-annotations:jar:2.4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.codehaus.jackson:jackson-mapper-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0/commons-io:commons-io:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.scala-lang:scala-library:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-digester:commons-digester:jar:1.8/commons-beanutils:commons-beanutils:jar:1.7.0/commons-logging:commons-logging:jar:1.0.3</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-lang:commons-lang:jar:2.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:jul-to-slf4j:jar:1.7.10/org.slf4j:slf4j-api:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/commons-lang:commons-lang:jar:2.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/com.thoughtworks.paranamer:paranamer:jar:2.6</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.eclipse.jetty.orbit:javax.servlet:jar:3.0.0.v201112011016</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.spark:spark-network-shuffle_2.10:jar:1.3.1/org.apache.spark:spark-network-common_2.10:jar:1.3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/org.jmock:jmock:jar:2.4.0/org.hamcrest:hamcrest-library:jar:1.1/org.hamcrest:hamcrest-core:jar:1.1</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/org.jmock:jmock:jar:2.4.0/org.hamcrest:hamcrest-core:jar:1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0/org.apache.curator:curator-client:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-httpclient:commons-httpclient:jar:3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/com.fasterxml.jackson.core:jackson-core:jar:2.4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/org.spark-project.protobuf:protobuf-java:jar:2.5.0-spark</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.scala-lang:scalap:jar:2.10.0/org.scala-lang:scala-compiler:jar:2.10.0/org.scala-lang:scala-library:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0/org.apache.curator:curator-client:jar:2.4.0/com.google.guava:guava:jar:14.0.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-annotations:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.json4s:json4s-ast_2.10:jar:3.2.10/org.scala-lang:scala-library:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/com.fasterxml.jackson.core:jackson-databind:jar:2.3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.hadoop:hadoop-auth:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0/com.twitter:chill-java:jar:0.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0/com.google.guava:guava:jar:14.0.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/com.google.guava:guava:jar:11.0.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/org.uncommons.maths:uncommons-maths:jar:1.2.2a</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.json4s:json4s-ast_2.10:jar:3.2.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/org.mortbay.jetty:jetty-util:jar:6.1.26</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/org.codehaus.jackson:jackson-core-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0/com.esotericsoftware.kryo:kryo:jar:2.21/com.esotericsoftware.reflectasm:reflectasm:jar:shaded:1.07</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.hadoop:hadoop-auth:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0/com.esotericsoftware.kryo:kryo:jar:2.21</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/org.spark-project.akka:akka-actor_2.10:jar:2.3.4-spark</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-codec:commons-codec:jar:1.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/net.sf.py4j:py4j:jar:0.8.2.1</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/junit:junit:jar:4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4/org.apache.commons:commons-compress:jar:1.4.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/com.google.inject:guice:jar:3.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/com.google.guava:guava:jar:14.0.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-logging:commons-logging:jar:1.1.1</node>
+            <node x="" y="">org.dbpedia.spotlight:wikipedia-stats-extractor:1.0-SNAPSHOT</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.spark:unused:jar:1.0.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-graphite:jar:3.1.0/org.slf4j:slf4j-api:jar:1.7.7</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/com.google.code.findbugs:jsr305:jar:2.0.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.scala-lang:scalap:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly2:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/com.sun.jersey:jersey-json:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/org.scala-lang:scala-reflect:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4/org.codehaus.jackson:jackson-core-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.ning:compress-lzf:jar:1.0.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-slf4j_2.10:jar:2.3.4-spark</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.codehaus.jackson:jackson-mapper-asl:jar:1.8.8/org.codehaus.jackson:jackson-core-asl:jar:1.8.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.core:jackson-databind:jar:2.4.4/com.fasterxml.jackson.core:jackson-core:jar:2.4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-graphite:jar:3.1.0/io.dropwizard.metrics:metrics-core:jar:3.1.0</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/org.scalatest:scalatest:jar:0.9.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-jvm:jar:3.1.0/io.dropwizard.metrics:metrics-core:jar:3.1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/org.spark-project.akka:akka-actor_2.10:jar:2.3.4-spark/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:slf4j-log4j12:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/commons-logging:commons-logging:jar:1.1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.spark:spark-network-shuffle_2.10:jar:1.3.1/org.spark-project.spark:unused:jar:1.0.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:slf4j-api:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0/commons-io:commons-io:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.core:jackson-databind:jar:2.4.4/com.fasterxml.jackson.core:jackson-annotations:jar:2.4.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5/org.slf4j:slf4j-api:jar:1.6.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0/com.esotericsoftware.kryo:kryo:jar:2.21/com.esotericsoftware.minlog:minlog:jar:1.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-collections:commons-collections:jar:3.2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-slf4j_2.10:jar:2.3.4-spark/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill-java:jar:0.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.spark:spark-network-common_2.10:jar:1.3.1/io.netty:netty-all:jar:4.0.23.Final</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/xmlenc:xmlenc:jar:0.52</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/net.jpountz.lz4:lz4:jar:1.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-lang:commons-lang:jar:2.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0/org.apache.commons:commons-lang3:jar:3.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0/org.apache.curator:curator-client:jar:2.4.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/com.google.guava:guava:jar:11.0.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:slf4j-log4j12:jar:1.7.10/org.slf4j:slf4j-api:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.spark:spark-network-shuffle_2.10:jar:1.3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/org.jmock:jmock:jar:2.4.0/org.hamcrest:hamcrest-library:jar:1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.scala-lang:scalap:jar:2.10.0/org.scala-lang:scala-compiler:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.zookeeper:zookeeper:jar:3.4.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-json:jar:3.1.0/com.fasterxml.jackson.core:jackson-databind:jar:2.4.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/com.sun.jersey.contribs:jersey-guice:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/org.spark-project.akka:akka-actor_2.10:jar:2.3.4-spark/com.typesafe:config:jar:1.2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/commons-io:commons-io:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/net.java.dev.jets3t:jets3t:jar:0.7.1/commons-codec:commons-codec:jar:1.3</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0/org.slf4j:slf4j-api:jar:1.7.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:jcl-over-slf4j:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4/org.slf4j:slf4j-api:jar:1.6.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-logging:commons-logging:jar:1.1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-hdfs:jar:2.2.0/commons-cli:commons-cli:jar:1.2</node>
+            <node x="" y="">org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-sql_2.10:jar:1.3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.hadoop:hadoop-auth:jar:2.2.0/commons-codec:commons-codec:jar:1.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/com.google.inject:guice:jar:3.0</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/org.scalacheck:scalacheck:jar:1.2</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-jvm:jar:3.1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.commons:commons-compress:jar:1.4.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-core:jar:3.1.0/org.slf4j:slf4j-api:jar:1.7.7</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/com.sun.jersey:jersey-json:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.commons:commons-math:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-cli:commons-cli:jar:1.2</node>
+            <node x="" y="">org.specs:specs:jar:1.2.5/org.jmock:jmock:jar:2.4.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/com.sun.jersey:jersey-server:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.core:jackson-databind:jar:2.4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-beanutils:commons-beanutils-core:jar:1.8.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-yarn-api:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/com.fasterxml.jackson.core:jackson-databind:jar:2.4.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/net.java.dev.jets3t:jets3t:jar:0.7.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.hadoop:hadoop-annotations:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.netty:netty-all:jar:4.0.23.Final</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-jvm:jar:3.1.0/org.slf4j:slf4j-api:jar:1.7.7</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0/commons-io:commons-io:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-digester:commons-digester:jar:1.8</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-slf4j_2.10:jar:2.3.4-spark/org.spark-project.akka:akka-actor_2.10:jar:2.3.4-spark</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.mesos:mesos:jar:shaded-protobuf:0.21.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-core:jar:3.1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.roaringbitmap:RoaringBitmap:jar:0.4.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:jcl-over-slf4j:jar:1.7.10/org.slf4j:slf4j-api:jar:1.7.10</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.scala-lang:scala-library:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-io:commons-io:jar:2.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5/org.slf4j:slf4j-log4j12:jar:1.6.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0/com.google.protobuf:protobuf-java:jar:2.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.curator:curator-recipes:jar:2.4.0/org.apache.curator:curator-framework:jar:2.4.0/org.apache.zookeeper:zookeeper:jar:3.4.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0/commons-io:commons-io:jar:2.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/xmlenc:xmlenc:jar:0.52</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/com.sun.jersey:jersey-server:jar:1.9</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.twitter:chill_2.10:jar:0.5.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0</node>
+            <node x="" y="">junit:junit:jar:4.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.ivy:ivy:jar:2.4.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/net.java.dev.jets3t:jets3t:jar:0.7.1/commons-httpclient:commons-httpclient:jar:3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.tachyonproject:tachyon-client:jar:0.5.0/org.tachyonproject:tachyon:jar:0.5.0/org.slf4j:slf4j-log4j12:jar:1.7.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/commons-net:commons-net:jar:2.2</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.spark:spark-network-common_2.10:jar:1.3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/io.dropwizard.metrics:metrics-graphite:jar:3.1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-configuration:commons-configuration:jar:1.6/commons-digester:commons-digester:jar:1.8/commons-logging:commons-logging:jar:1.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.commons:commons-compress:jar:1.4.1/org.tukaani:xz:jar:1.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/org.apache.avro:avro:jar:1.7.4/org.xerial.snappy:snappy-java:jar:1.0.4.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4/org.scala-lang:scala-library:jar:2.10.4</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.slf4j:slf4j-log4j12:jar:1.7.10/log4j:log4j:jar:1.2.17</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0/org.apache.hadoop:hadoop-yarn-client:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-common:jar:2.2.0/commons-net:commons-net:jar:3.1</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0/org.slf4j:slf4j-api:jar:1.7.5</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0/org.apache.hadoop:hadoop-yarn-common:jar:2.2.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.json4s:json4s-jackson_2.10:jar:3.2.10/org.json4s:json4s-core_2.10:jar:3.2.10/org.scala-lang:scalap:jar:2.10.0/org.scala-lang:scala-compiler:jar:2.10.0/org.scala-lang:scala-reflect:jar:2.10.0</node>
+            <node x="" y="">org.apache.spark:spark-core_2.10:jar:1.3.1/org.apache.hadoop:hadoop-client:jar:2.2.0/org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0/org.slf4j:slf4j-log4j12:jar:1.7.5</node>
+          </nodes>
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="0.07421023965141613" x="640.0" y="3662.0" />
+          <SelectedNodes />
+          <Categories />
+          <SCOPE>All</SCOPE>
+          <VISIBILITY>All</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.10/1.3.1/spark-sql_2.10-1.3.1-sources.jar!/org/apache/spark/sql/SQLContext.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5163636" vertical-offset="15022" max-vertical-offset="20179">
+          <caret line="930" column="6" selection-start-line="930" selection-start-column="6" selection-end-line="930" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4392765" vertical-offset="0" max-vertical-offset="2533">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
-          <caret line="30" column="68" selection-start-line="30" selection-start-column="68" selection-end-line="30" selection-end-column="68" />
+        <state vertical-scroll-proportion="0.5" vertical-offset="867" max-vertical-offset="2703">
+          <caret line="65" column="32" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/dbpedia/wiki/format/XmlInputFormat.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5011287" vertical-offset="2022" max-vertical-offset="2601">
-          <caret line="152" column="32" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.2165992" vertical-offset="97" max-vertical-offset="2601">
+          <caret line="26" column="48" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.10/1.3.1/spark-sql_2.10-1.3.1-sources.jar!/org/apache/spark/sql/DataFrame.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.51602024" vertical-offset="12121" max-vertical-offset="22440">
+          <caret line="731" column="6" selection-start-line="731" selection-start-column="6" selection-end-line="731" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="593">
+          <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/dbpedia/spotlight/WikipediaParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.80269814" vertical-offset="0" max-vertical-offset="918">
+          <caret line="50" column="63" selection-start-line="50" selection-start-column="63" selection-end-line="50" selection-end-column="63" />
+          <folding />
         </state>
       </provider>
     </entry>

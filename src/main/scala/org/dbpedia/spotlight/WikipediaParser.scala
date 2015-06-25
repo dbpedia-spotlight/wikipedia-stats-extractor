@@ -15,23 +15,47 @@
  */
 package org.dbpedia.spotlight
 
+import org.apache.spark.sql.SQLContext
 import org.dbpedia.wiki.format.XmlInputFormat
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.SparkContext
+import org.apache.spark.sql
 import org.apache.spark.rdd.RDD
+
+import scala.collection.mutable.ArrayBuffer
 
 object WikipediaParser {
 
   def main(args: Array[String]): Unit ={
-    val inputWikiDump = "E:\\ApacheSpark\\enwiki-pages-articles-sample - Copy.xml"
+    val inputWikiDump = "E:\\My_Masters_Data_Science\\Google Summer of Code 2015\\enwiki-20090902-pages-articles-sample.xml"
 
-    val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.3.1-bin-hadoop2.4\\spark-1.3.1-bin-hadoop2.4\\bin")
+    val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.4.0-bin-hadoop2.6\\bin")
 
-    //Read the Wikipedia XML Dump and store each page in JSON format as element of RDD
+    //Read the Wikipedia XML Dump and store each page in JSON format as an element of RDD
     val pageRDDs = readFile(inputWikiDump,sc)
 
-    pageRDDs.foreach(println)
+    //Initializing SqlContext
+    val sqlContext = new SQLContext(sc)
+
+    //Create initial Dataframe from the base RDD
+    val dfWikiRDD = sqlContext.jsonRDD(pageRDDs)
+
+    dfWikiRDD.printSchema()
+    //dfWikiRDD.registerTempTable("wikiArticles")
+
+    //Fetching all the non-redirect articles
+    //val paraLinks = sqlContext.sql("SELECT wikiTitle FROM wikiArticles where redirect = ''").collect()
+
+    //paraLinks.map()
+    val dflinks = dfWikiRDD.select("links.description").map(row => row.getString(0))
+                  //.collect().map(row => row.getSeq[org.apache.spark.sql.Row](0))
+                  //.flatMap{case ArrayBuffer(x) => List(x)}
+
+
+    println(dflinks)
+    dflinks.foreach(println)
+
 
   }
   def readFile(path: String, sc: SparkContext): RDD[String] = {
