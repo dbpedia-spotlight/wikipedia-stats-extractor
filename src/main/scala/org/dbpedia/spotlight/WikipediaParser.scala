@@ -48,16 +48,21 @@ object WikipediaParser {
     //val paraLinks = sqlContext.sql("SELECT wikiTitle FROM wikiArticles where redirect = ''").collect()
 
     //paraLinks.map()
-    val dflinks = dfWikiRDD.select("links.description").map(row => row.getString(0))
+    val dfSurfaceForms = dfWikiRDD.select("links.description")
+                         .map(row => row.getList[String](0))
                   //.collect().map(row => row.getSeq[org.apache.spark.sql.Row](0))
                   //.flatMap{case ArrayBuffer(x) => List(x)}
 
 
-    println(dflinks)
-    dflinks.foreach(println)
+    //println(dflinks)
+    //dflinks.foreach(println)
 
 
   }
+
+  /*
+  Function to parse the XML dump into JSON
+   */
   def readFile(path: String, sc: SparkContext): RDD[String] = {
     val conf = new Configuration()
     conf.set(XmlInputFormat.START_TAG_KEY, "<page>")
@@ -66,5 +71,13 @@ object WikipediaParser {
                                       classOf[Text], conf)
     rawXmls.map(p => p._2.toString)
   }
+
+  /*
+  Function to Convert Array of ArrayBuffers into List of Strings
+   */
+  /*def abToList(input: org.apache.spark.sql.Row): List[String] = {
+
+
+  }*/
 
 }
