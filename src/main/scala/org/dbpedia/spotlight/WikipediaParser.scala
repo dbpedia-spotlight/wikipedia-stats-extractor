@@ -15,48 +15,38 @@
  */
 package org.dbpedia.spotlight
 
-import org.apache.spark.sql.SQLContext
+import com.sun.xml.internal.bind.v2.TODO
+import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.dbpedia.wiki.format.XmlInputFormat
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql
 import org.apache.spark.rdd.RDD
-
+import org.apache.spark.sql.Row
 import scala.collection.mutable.ArrayBuffer
 
 object WikipediaParser {
 
   def main(args: Array[String]): Unit ={
+
+    //TODO - Change the input file
     val inputWikiDump = "E:\\My_Masters_Data_Science\\Google Summer of Code 2015\\enwiki-20090902-pages-articles-sample.xml"
 
+    //TODO - Initialize with Proper Spark Settings
     val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.4.0-bin-hadoop2.6\\bin")
 
     //Read the Wikipedia XML Dump and store each page in JSON format as an element of RDD
     val pageRDDs = readFile(inputWikiDump,sc)
 
-    //Initializing SqlContext
+    //Initializing SqlContext for Use in Operating on DataFrames
     val sqlContext = new SQLContext(sc)
 
-    //Create initial Dataframe from the base RDD
+    //Create Initial DataFrame by Parsing the JSONRDD
     val dfWikiRDD = sqlContext.jsonRDD(pageRDDs)
 
-    dfWikiRDD.printSchema()
-    //dfWikiRDD.registerTempTable("wikiArticles")
-
-    //Fetching all the non-redirect articles
-    //val paraLinks = sqlContext.sql("SELECT wikiTitle FROM wikiArticles where redirect = ''").collect()
-
-    //paraLinks.map()
-    val dfSurfaceForms = dfWikiRDD.select("links.description")
-                         .map(row => row.getList[String](0))
-                  //.collect().map(row => row.getSeq[org.apache.spark.sql.Row](0))
-                  //.flatMap{case ArrayBuffer(x) => List(x)}
-
-
-    //println(dflinks)
-    //dflinks.foreach(println)
-
+    //Method to JsonParsing
+    val dfSurfaceForms = parseJson(sqlContext,dfWikiRDD)
 
   }
 
@@ -73,11 +63,24 @@ object WikipediaParser {
   }
 
   /*
-  Function to Convert Array of ArrayBuffers into List of Strings
+
    */
-  /*def abToList(input: org.apache.spark.sql.Row): List[String] = {
+  def parseJson(sqlContext:SQLContext, dfWikiRDD:DataFrame): Unit= {
 
+    //Print the JSON Schema
+    dfWikiRDD.printSchema()
 
-  }*/
+    //Parse the individual Anchors
+    val dfSurfaceForms = dfWikiRDD.select("links.description")
+                         .map(artRow => artRow.getSeq[Row](0))
+                         .map(row => row.toList)
+                         .flatMap(sf => sf)
 
+    dfSurfaceForms.foreach(println)
+    println(dfSurfaceForms)
+  }
+
+  def sfParse(row:Row): String ={
+      row.toString()
+  }
 }
