@@ -78,7 +78,7 @@ class WikipediaParser(inputWikiDump:String,lang:String)(implicit val sc: SparkCo
 
     //Print the JSON Schema
     //TODO - This is just for printing the Input JSON Schema. Will be removed at the end
-    //dfWikiRDD.printSchema()
+    dfWikiRDD.printSchema()
 
     //Declaring a local variable to avoid Serializing the whole class
     val language = lang
