@@ -15,7 +15,7 @@
  */
 
 
-package org.dbpedia.util;
+package org.dbpedia.spotlight.util;
 
 //import org.dbpedia.spotlight.util.WikiUtil;
 

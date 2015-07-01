@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.dbpedia.wiki.format;
+package org.dbpedia.spotlight.wikiformat;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -145,7 +145,10 @@ public class XmlInputFormat extends TextInputFormat {
 
         @Override
         public Text getCurrentValue() throws IOException, InterruptedException {
-            //return currentValue;
+            /*
+            Below Logic for calling JSON-WikiPedia for every XML article parsed
+            from the Raw wikipedia dump
+             */
             JsonWikiParser jsonWikiParser = new JsonWikiParser(currentValue.toString(), "en");
             try {
                 return new Text(jsonWikiParser.jsonParser());
