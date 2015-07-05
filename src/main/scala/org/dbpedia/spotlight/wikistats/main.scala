@@ -17,8 +17,11 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import java.util.Locale
+
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
+import scala.collection.JavaConversions._
 
 /*
 Entry point for Code Execution
@@ -54,12 +57,26 @@ object main {
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
-    computeStats.uriCounts(dfWikiRDD)
+    //computeStats.uriCounts(dfWikiRDD)
+    //computeStats.sfCounts(wikipediaParser.getSfs())
+    val allSfs = wikipediaParser.getSfs(dfWikiRDD)
+                 .map(artRow => artRow.getList[String](1))
+                 .flatMap(sf => sf)
+                 .collect()
+                 .toList
+
+    //Broadcasting variable for building FSA
+
 
   }
 
+  /*
+  Logic for building the memory type token store
+   */
+  def getTokenStore(): Unit ={
 
-
-
-
+    val stemmer = new Stemmer()
+    val locale = new Locale("en")
+    val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
+  }
 }

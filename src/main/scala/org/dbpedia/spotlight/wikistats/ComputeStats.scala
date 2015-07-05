@@ -54,8 +54,11 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
     dfSurfaceForms.foreach(println)
   }
 
-  def sfCounts(dfWikiRDD:DataFrame): Unit={
+  def sfList(dfWikiRDD:DataFrame): Unit={
+    val dfSurfaceForms = dfWikiRDD.select("links.id","links.description","wid").rdd
 
+
+    dfSurfaceForms.foreach(println)
   }
 
   /*

@@ -21,7 +21,7 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{Text, LongWritable}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.sql.{Row, DataFrame, SQLContext}
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 
 
@@ -59,5 +59,13 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
   }
 
 
+  /*
+     Method to Get the list of Surface forms from the wiki
+   */
+
+  def getSfs(dfWikiRDD:DataFrame) : RDD[Row] = {
+
+    dfWikiRDD.select("wid","links.description").rdd
+  }
 
 }
