@@ -15,7 +15,7 @@
  */
 
 
-package org.dbpedia.spotlight.util;
+package org.dbpedia.spotlight.wikistats.util;
 
 //import org.dbpedia.spotlight.util.WikiUtil;
 

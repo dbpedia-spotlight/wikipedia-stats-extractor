@@ -18,7 +18,7 @@
 package org.dbpedia.spotlight.wikistats
 
 import org.apache.spark.sql.{DataFrame, SQLContext}
-import org.dbpedia.spotlight.util.DBpediaUriEncode
+import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import scala.collection.JavaConversions._
 
 /*
@@ -30,7 +30,7 @@ class ComputeStats(lang:String) (implicit val sqlContext: SQLContext){
   /*
 Method to Create Dataframe and parse the WikiIds from the JSON text
 */
-  def uriCounts(dfWikiRDD:DataFrame): Unit= {
+  def uriCounts(dfWikiRDD:DataFrame){
 
     //Print the JSON Schema
     //TODO - This is just for printing the Input JSON Schema. Will be removed at the end
@@ -41,13 +41,13 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
 
     //Parse the individual WikiIds and create URI Counts
     val dfSurfaceForms = dfWikiRDD.select("links.id")//.where("")
-      .rdd
-      .map(artRow => artRow.getList[String](0))
-      .flatMap(articleIds => articleIds.map(id=>id))
-      .mapPartitions{ wikiIds =>
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      wikiIds.map(wikiId => (dbpediaEncode.uriEncode(wikiId),1))}
-      .reduceByKey(_ + _)
+                        .rdd
+                        .map(artRow => artRow.getList[String](0))
+                        .flatMap(articleIds => articleIds.map(id=>id))
+                        .mapPartitions{ wikiIds =>
+                                        val dbpediaEncode = new DBpediaUriEncode(language)
+                                        wikiIds.map(wikiId => (dbpediaEncode.uriEncode(wikiId),1))}
+                        .reduceByKey(_ + _)
 
 
 

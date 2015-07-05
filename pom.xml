@@ -69,7 +69,13 @@
       <dependency>
           <groupId>org.dbpedia.extraction</groupId>
           <artifactId>core</artifactId>
-          <version>3.9</version> </dependency>
+          <version>3.9</version>
+      </dependency>
+      <dependency>
+          <groupId>org.dbpedia.spotlight</groupId>
+          <version>0.7</version>
+          <artifactId>core</artifactId>
+      </dependency>
   </dependencies>
 
   <build>

@@ -19,6 +19,7 @@ package org.dbpedia.spotlight.wikistats
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.DataFrame
 
 /*
 WikiPedia Parser trait which can be extended to include any parsers
@@ -28,5 +29,6 @@ trait WikiPediaParser {
 
   //Method to parse the RawWikiPedia dump and return RDD of Strings
   def parse(path: String, sc: SparkContext): RDD[String]
+
 
 }

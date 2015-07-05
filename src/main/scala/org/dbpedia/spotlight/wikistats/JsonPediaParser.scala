@@ -22,7 +22,7 @@ import org.apache.hadoop.io.{Text, LongWritable}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SQLContext}
-import org.dbpedia.spotlight.wikiformat.XmlInputFormat
+import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 
 
 /*
@@ -39,7 +39,6 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
     sqlContext.jsonRDD(pageRDDs)
 
   }
-
 
   /*
     Method to parse the XML dump into JSON

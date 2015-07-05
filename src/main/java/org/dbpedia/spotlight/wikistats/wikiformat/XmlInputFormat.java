@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.dbpedia.spotlight.wikiformat;
+package org.dbpedia.spotlight.wikistats.wikiformat;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
