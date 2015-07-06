@@ -20,6 +20,7 @@ package org.dbpedia.spotlight.wikistats
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Row, DataFrame}
+import org.dbpedia.spotlight.model.TokenType
 
 /*
 WikiPedia Parser trait which can be extended to include any parsers
@@ -31,6 +32,8 @@ trait WikiPediaParser {
   def parse(path: String, sc: SparkContext): RDD[String]
 
   //Method to get the list of Surface forms from the wikiDump
-  def getSfs(dfWikiRDD:DataFrame) : RDD[Row]
+  //def getSfs(dfWikiRDD:DataFrame) : RDD[Row]
 
+  //Method to build tokens from the list of Surface forms
+  def getTokens(allSfs:List[String],lang:String): List[TokenType]
 }

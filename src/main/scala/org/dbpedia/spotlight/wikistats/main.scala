@@ -21,7 +21,11 @@ import java.util.Locale
 
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
+import org.dbpedia.spotlight.model.TokenType
+import org.dbpedia.spotlight.db.model.Stemmer
+import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 /*
 Entry point for Code Execution
@@ -60,23 +64,18 @@ object main {
     //computeStats.uriCounts(dfWikiRDD)
     //computeStats.sfCounts(wikipediaParser.getSfs())
     val allSfs = wikipediaParser.getSfs(dfWikiRDD)
-                 .map(artRow => artRow.getList[String](1))
-                 .flatMap(sf => sf)
-                 .collect()
-                 .toList
 
     //Broadcasting variable for building FSA
+    //val sfsBroadcast = sc.broadcast(allSfs)
+
+    //Below Logic is to get Tokens from the list of Surface forms
+    //val tokens = wikipediaParser.getTokens(allSfs,lang)
+
+    //Broadcasting tokens
+    //val tokenBroadcast = sc.broadcast(tokens)
 
 
   }
 
-  /*
-  Logic for building the memory type token store
-   */
-  def getTokenStore(): Unit ={
 
-    val stemmer = new Stemmer()
-    val locale = new Locale("en")
-    val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
-  }
 }
