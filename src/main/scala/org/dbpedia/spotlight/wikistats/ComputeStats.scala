@@ -17,8 +17,13 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import java.util.Locale
+
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
+import org.dbpedia.spotlight.db.model.Stemmer
+import org.dbpedia.spotlight.db.tokenize.{LanguageIndependentTokenizer, LanguageIndependentStringTokenizer}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import scala.collection.JavaConversions._
 
@@ -76,10 +81,34 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
     //Get wid and articleText for FSA spotter
     val textIdRDD = wikipediaParser.getArticleText(dfWikiRDD)
 
-    textIdRDD.mapPartitions(textId => {
+    //Declaring a local variable to avoid Serializing the whole class
+    val language = lang
 
-                           })
+    textIdRDD.mapPartitions(textIds => {
+              //Implementing the FSA Spotter logic
+              val stemmer = new Stemmer()
+              val locale = new Locale(language)
+              val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
+              val token = sfsBroadcast.value.flatMap( sf => lst.tokenizeUnstemmed(sf) ).toSet
+
+              //Initalizing the Memory Token Store
+              val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokenBroadcast.value)
+
+              //TODO Change the below logic to implement actual Stop words instead of the sample.
+              //Creating a sample StopWords
+              val stopWords = Set[String]("a","the","an","that")
+              val lit = new LanguageIndependentTokenizer(stopWords,stemmer,locale,tokenTypeStore)
+              //Building Dictionary and calling the extract method
+              val allOccFSASpotter = new AllOccurrencesFSASpotter(FSASpotter.buildDictionaryFromIterable(sfsBroadcast.value,lit),lit)
+
+              //Extracting the surface forms from FSA Spotter
+              textIds.map(textId => {
+                      allOccFSASpotter
+                      .extract(textId._2)
+                      .map(sfOffset => (textId._1,sfOffset._1))
+                      .foreach(println)
+              })
+    })
   }
-
 
 }
