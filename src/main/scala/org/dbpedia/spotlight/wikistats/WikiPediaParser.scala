@@ -32,8 +32,11 @@ trait WikiPediaParser {
   def parse(path: String, sc: SparkContext): RDD[String]
 
   //Method to get the list of Surface forms from the wikiDump
-  //def getSfs(dfWikiRDD:DataFrame) : RDD[Row]
+  def getSfs(dfWikiRDD:DataFrame) : List[String]
 
   //Method to build tokens from the list of Surface forms
   def getTokens(allSfs:List[String],lang:String): List[TokenType]
+
+  //Method to get the wid and article text from dataframe
+  def getArticleText(dfWikiRDD:DataFrame): RDD[(Long,String)]
 }

@@ -17,6 +17,7 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import scala.collection.JavaConversions._
@@ -25,7 +26,7 @@ import scala.collection.JavaConversions._
 Class for computing various like uri, surface form and token Statistics on wikipedia dump
  */
 
-class ComputeStats(lang:String) (implicit val sqlContext: SQLContext){
+class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
 
   /*
 Method to Create Dataframe and parse the WikiIds from the JSON text
@@ -54,16 +55,31 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
     dfSurfaceForms.foreach(println)
   }
 
-  def sfList(dfWikiRDD:DataFrame): Unit={
-    val dfSurfaceForms = dfWikiRDD.select("links.id","links.description","wid").rdd
+  /*
+  Method to get the list of surface forms as an RDD from the FSA Spotter
+   */
 
+  def sfSpotter(wikipediaParser:JsonPediaParser,dfWikiRDD:DataFrame): Unit={
 
-    dfSurfaceForms.foreach(println)
+    //computeStats.sfCounts(wikipediaParser.getSfs())
+    val allSfs = wikipediaParser.getSfs(dfWikiRDD)
+
+    //Broadcasting variable for building FSA
+    val sfsBroadcast = sc.broadcast(allSfs)
+
+    //Below Logic is to get Tokens from the list of Surface forms
+    val tokens = wikipediaParser.getTokens(allSfs,lang)
+
+    //Broadcasting tokens
+    val tokenBroadcast = sc.broadcast(tokens)
+
+    //Get wid and articleText for FSA spotter
+    val textIdRDD = wikipediaParser.getArticleText(dfWikiRDD)
+
+    textIdRDD.mapPartitions(textId => {
+
+                           })
   }
 
-  /*
-
-  TODO All the other Counts methods here.
-   */
 
 }

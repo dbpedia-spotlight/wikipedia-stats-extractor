@@ -21,7 +21,7 @@ import java.util.Locale
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{Text, LongWritable}
-import org.apache.spark.SparkContext
+import org.apache.spark.{rdd, SparkContext}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Row, DataFrame, SQLContext}
 import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
@@ -70,17 +70,29 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
      Method to Get the list of Surface forms from the wiki
    */
 
-  //def getSfs(dfWikiRDD:DataFrame) : List[String] = {
-  def getSfs(dfWikiRDD:DataFrame) : Unit = {
+  def getSfs(dfWikiRDD:DataFrame) : List[String] = {
 
     dfWikiRDD.select("wid","links.description")
              .rdd
-             .map(artRow => (artRow.getList[String](0))).collect().foreach(println)
-             //.flatMap(sf => sf)
-             //.collect()
-             //.toList
+             .map(artRow => (artRow.getList[String](1)))
+             .flatMap(sf => sf)
+             .collect()
+             .toList
   }
 
+  /*
+  Method to get the wid and article text from the wiki dump
+   */
+  //TODO Need to improve the filter condition of blank articles. we can include in the where clause of dataframe
+  def getArticleText(dfWikiRDD:DataFrame): RDD[(Long,String)] = {
+
+    dfWikiRDD.select("wid","wikiText")
+             .rdd
+             .map(artRow => {
+                 (artRow.getLong(0),artRow.getString(1))
+             })
+             .filter(artRow => artRow._2.length > 0)
+  }
   /*
 
   Logic to Create Memory Token Store
