@@ -46,19 +46,13 @@ object main {
     /*
     Parsing and Processing Starts from here
      */
-    val wikipediaParser = new JsonPediaParser(lang)
-
-    //Read the Wikipedia XML Dump and store each page in JSON format as an element of RDD
-    val pageRDDs = wikipediaParser.parse(inputWikiDump,sc)
-
-    //Logic to create Json dataframe from the Base RDD
-    val dfWikiRDD = wikipediaParser.parseJSON(pageRDDs)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
     //Call FSA Spotter for getting the surface forms from article text
-    computeStats.sfSpotter(wikipediaParser,dfWikiRDD)
+    computeStats.sfSpotter(wikipediaParser)
 
 
 

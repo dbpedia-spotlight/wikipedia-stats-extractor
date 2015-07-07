@@ -27,6 +27,7 @@ import org.dbpedia.spotlight.db.tokenize.{LanguageIndependentTokenizer, Language
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import scala.collection.JavaConversions._
 
+
 /*
 Class for computing various like uri, surface form and token Statistics on wikipedia dump
  */
@@ -36,6 +37,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
   /*
 Method to Create Dataframe and parse the WikiIds from the JSON text
 */
+  /*
   def uriCounts(dfWikiRDD:DataFrame){
 
     //Print the JSON Schema
@@ -59,56 +61,53 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
 
     dfSurfaceForms.foreach(println)
   }
+  */
 
   /*
   Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
-  def sfSpotter(wikipediaParser:JsonPediaParser,dfWikiRDD:DataFrame): Unit={
+  def sfSpotter(wikipediaParser:JsonPediaParser): Unit={
+
 
     //computeStats.sfCounts(wikipediaParser.getSfs())
-    val allSfs = wikipediaParser.getSfs(dfWikiRDD)
-
-    //Broadcasting variable for building FSA
-    val sfsBroadcast = sc.broadcast(allSfs)
+    val allSfs = wikipediaParser.getSfs().collect().toList
 
     //Below Logic is to get Tokens from the list of Surface forms
-    val tokens = wikipediaParser.getTokens(allSfs,lang)
+    val tokens = wikipediaParser.getTokens()
 
-    //Broadcasting tokens
-    val tokenBroadcast = sc.broadcast(tokens)
+    //Creating MemoryTokenTypeStore for the list of Tokens
+    val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokens)
+
+    //Below logic is for building the FSA Dictionary to be used in FSA Spotter
+    val stemmer = new Stemmer()
+    val locale = new Locale(lang)
+
+    //TODO Change the below logic to implement actual Stop words instead of the sample.
+    //Creating a sample StopWords
+    val stopWords = Set[String]("a","the","an","that")
+    val lit = new LanguageIndependentTokenizer(stopWords,stemmer,locale,tokenTypeStore)
+    val allOccFSASpotter = new AllOccurrencesFSASpotter(FSASpotter.buildDictionaryFromIterable(allSfs,lit),lit)
+
+    val allOccFSASpotterBc = sc.broadcast(allOccFSASpotter)
+
 
     //Get wid and articleText for FSA spotter
-    val textIdRDD = wikipediaParser.getArticleText(dfWikiRDD)
+    val textIdRDD = wikipediaParser.getArticleText()
 
-    //Declaring a local variable to avoid Serializing the whole class
-    val language = lang
+    textIdRDD.foreach(println)
+    //Implementing the FSA Spotter logic
 
     textIdRDD.mapPartitions(textIds => {
-              //Implementing the FSA Spotter logic
-              val stemmer = new Stemmer()
-              val locale = new Locale(language)
-              val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
-              val token = sfsBroadcast.value.flatMap( sf => lst.tokenizeUnstemmed(sf) ).toSet
-
-              //Initalizing the Memory Token Store
-              val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokenBroadcast.value)
-
-              //TODO Change the below logic to implement actual Stop words instead of the sample.
-              //Creating a sample StopWords
-              val stopWords = Set[String]("a","the","an","that")
-              val lit = new LanguageIndependentTokenizer(stopWords,stemmer,locale,tokenTypeStore)
-              //Building Dictionary and calling the extract method
-              val allOccFSASpotter = new AllOccurrencesFSASpotter(FSASpotter.buildDictionaryFromIterable(sfsBroadcast.value,lit),lit)
-
               //Extracting the surface forms from FSA Spotter
               textIds.map(textId => {
-                      allOccFSASpotter
+                      allOccFSASpotterBc.value
                       .extract(textId._2)
                       .map(sfOffset => (textId._1,sfOffset._1))
                       .foreach(println)
               })
     })
+
   }
 
 }

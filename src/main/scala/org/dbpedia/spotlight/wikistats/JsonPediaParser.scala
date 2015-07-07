@@ -35,8 +35,16 @@ import scala.collection.mutable.ListBuffer
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
  */
-class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sqlContext:SQLContext) extends WikiPediaParser{
+case class JsonPediaParser(inputWikiDump:String, lang:String)
+                     (implicit val sc: SparkContext,implicit val sqlContext:SQLContext)
+                     extends WikiPediaParser{
 
+
+  val pageRDDs = parse(inputWikiDump)
+  val dfWikiRDD = parseJSON(pageRDDs)
+  val stemmer = new Stemmer()
+  val locale = new Locale(lang)
+  val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
   /*
     Method to Begin the Parsing Logic
    */
@@ -50,7 +58,7 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
   /*
     Method to parse the XML dump into JSON
  */
-  def parse(path: String, sc: SparkContext): RDD[String] = {
+  def parse(path: String): RDD[String] = {
 
     val conf = new Configuration()
 
@@ -70,21 +78,19 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
      Method to Get the list of Surface forms from the wiki
    */
 
-  def getSfs(dfWikiRDD:DataFrame) : List[String] = {
+  def getSfs() : RDD[String] = {
 
     dfWikiRDD.select("wid","links.description")
              .rdd
              .map(artRow => (artRow.getList[String](1)))
              .flatMap(sf => sf)
-             .collect()
-             .toList
   }
 
   /*
   Method to get the wid and article text from the wiki dump
    */
   //TODO Need to improve the filter condition of blank articles. we can include in the where clause of dataframe
-  def getArticleText(dfWikiRDD:DataFrame): RDD[(Long,String)] = {
+  def getArticleText(): RDD[(Long,String)] = {
 
     dfWikiRDD.select("wid","wikiText")
              .rdd
@@ -119,13 +125,11 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
   /*
   Logic for building the memory type tokens
    */
-  def getTokens(allSfs:List[String],lang:String): List[TokenType] ={
+  def getTokens(): List[TokenType] ={
 
     //Below Logic is for creating Token Store from the Surface forms
-    val stemmer = new Stemmer()
-    val locale = new Locale(lang)
-    val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
-    val token = allSfs.flatMap( sf => lst.tokenizeUnstemmed(sf) ).toSet
+    //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
+    val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
 
     val tokenTypes = new ListBuffer[TokenType]()
     var i= 1

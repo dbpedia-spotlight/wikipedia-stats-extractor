@@ -29,14 +29,14 @@ WikiPedia Parser trait which can be extended to include any parsers
 trait WikiPediaParser {
 
   //Method to parse the RawWikiPedia dump and return RDD of Strings
-  def parse(path: String, sc: SparkContext): RDD[String]
+  def parse(path: String): RDD[String]
 
   //Method to get the list of Surface forms from the wikiDump
-  def getSfs(dfWikiRDD:DataFrame) : List[String]
+  def getSfs() : RDD[String]
 
   //Method to build tokens from the list of Surface forms
-  def getTokens(allSfs:List[String],lang:String): List[TokenType]
+  def getTokens(): List[TokenType]
 
   //Method to get the wid and article text from dataframe
-  def getArticleText(dfWikiRDD:DataFrame): RDD[(Long,String)]
+  def getArticleText(): RDD[(Long,String)]
 }
