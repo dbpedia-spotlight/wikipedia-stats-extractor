@@ -17,9 +17,7 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import java.util.Locale
-
-import org.apache.spark.SparkContext
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
 import scala.collection.JavaConversions._
 
@@ -33,8 +31,14 @@ object main {
     //TODO - Change the input file
     val inputWikiDump = "E:\\enwiki-pages-articles-latest.xml"
 
+    val sparkConf = new SparkConf()
+                    .setMaster("local[2]")
+                    .setAppName("WikiStats")
+                    .set("spark.sql.shuffle.partitions","10")
+
     //TODO - Initialize with Proper Spark Settings
-    implicit val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.4.0-bin-hadoop2.6\\bin")
+    implicit val sc = new SparkContext(sparkConf)
+
 
     //Wikipedia Dump Language
     //TODO - To Change in future to pass the language as input arguments. Defaulting to English for testing
@@ -52,7 +56,7 @@ object main {
     val computeStats = new ComputeStats(lang)
 
     //Call FSA Spotter for getting the surface forms from article text
-    val sfsSpotter = computeStats.sfSpotter(wikipediaParser)
+    val sfsSpotter = computeStats.buildCounts(wikipediaParser)
 
 
 

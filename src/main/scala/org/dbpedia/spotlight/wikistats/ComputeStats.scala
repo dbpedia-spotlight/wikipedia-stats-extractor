@@ -17,14 +17,10 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import java.util.Locale
 
 import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
-import org.dbpedia.spotlight.db.model.Stemmer
-import org.dbpedia.spotlight.db.tokenize.{LanguageIndependentTokenizer, LanguageIndependentStringTokenizer}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.LanguageTokenizer
 import scala.collection.JavaConversions._
@@ -40,7 +36,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
   Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
-  def sfSpotter(wikipediaParser:JsonPediaParser): Unit={
+  def buildCounts(wikipediaParser:JsonPediaParser): Unit={
 
 
     val allSfs = wikipediaParser.getSfs().collect().toList
@@ -86,8 +82,8 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
               .flatMap(idSf => idSf)
     })
 
-    val totalSfDf = totalSfsRDD.toDF("wid", "sf")
-    val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf", "uri")
+    val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
+    val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
     counts(uriSfDf,totalSfDf)
   }
@@ -98,14 +94,57 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
   def counts(uriSfDf:DataFrame, totalSfDf:DataFrame) = {
 
     //Joining two Datasets
-    val joinedDf = uriSfDf.join(totalSfDf,(uriSfDf("wid") === totalSfDf("wid")) && (uriSfDf("sf") === totalSfDf("sf")),"left_outer")
+    val joinedDf = uriSfDf.join(totalSfDf,(uriSfDf("wid") === totalSfDf("wid"))
+                                && (uriSfDf("sf1") === totalSfDf("sf2")),"left_outer")
 
+    val language = lang
     //Get the URI Counts
+
     val uriCounts = joinedDf
                     .groupBy("uri")
-                    .agg("uri" -> "count")
+                    .count
                     .rdd
-                    .collect().foreach(println)
+                    .map(row => {
+                        (row.getString(0),row.getLong(1))
+                    })
+                    .mapPartitions(uris => {
+                                  val dbpediaEncode = new DBpediaUriEncode(language)
+                                  uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
 
+                    })
+                    //.collect().foreach(println)
+
+    //Pair Counts
+    val pairCounts  = joinedDf
+                      .groupBy("sf1","uri")
+                      .count
+                      .rdd
+                      .map(row => {
+                          (row.getString(0),row.getString(1),row.getLong(2))
+                      })
+                      .mapPartitions(urisfs => {
+                                    val dbpediaEncode = new DBpediaUriEncode(language)
+                                    urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
+
+                      })
+                      //.collect().foreach(println)
+
+    //Surface Form Counts Logic
+    val sfAnnotatedCounts = uriSfDf
+                            .groupBy("sf1")
+                            .count
+
+    val sfSpotterCounts = totalSfDf
+                          .groupBy("sf2")
+                          .count
+
+
+    val sfJoined = sfAnnotatedCounts
+                   .join(sfSpotterCounts,sfAnnotatedCounts("sf1") === sfSpotterCounts("sf2"),"left_outer")
+                   .rdd
+                   //.map(row => {
+                   //    (row.getString(0),row.getLong(1),row.getLong(3))
+                   //})
+                   .collect().foreach(println)
   }
 }
