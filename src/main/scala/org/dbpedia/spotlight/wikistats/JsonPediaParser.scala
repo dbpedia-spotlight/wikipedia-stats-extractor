@@ -42,9 +42,7 @@ case class JsonPediaParser(inputWikiDump:String, lang:String)
 
   val pageRDDs = parse(inputWikiDump)
   val dfWikiRDD = parseJSON(pageRDDs)
-  val stemmer = new Stemmer()
-  val locale = new Locale(lang)
-  val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
+
   /*
     Method to Begin the Parsing Logic
    */
@@ -127,6 +125,9 @@ case class JsonPediaParser(inputWikiDump:String, lang:String)
    */
   def getTokens(): List[TokenType] ={
 
+    val stemmer = new Stemmer()
+    val locale = new Locale(lang)
+    val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
     //Below Logic is for creating Token Store from the Surface forms
     //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
     val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
