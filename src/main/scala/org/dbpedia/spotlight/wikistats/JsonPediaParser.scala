@@ -145,16 +145,9 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
     val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
 
-    val tokenTypes = new ListBuffer[TokenType]()
-    var i= 1
-    token.map(x =>{
-      val token = new TokenType(i,x,0)
-      tokenTypes += token
-      i += 1
+    val tokenTypes=token.zip(Stream from 1).map{case (x,i) => new TokenType(i,x,0)}
 
-    } )
-
-    tokenTypes.toList
+    tokenTypes
   }
 
 
