@@ -35,13 +35,13 @@ import scala.collection.mutable.ListBuffer
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
  */
-case class JsonPediaParser(inputWikiDump:String, lang:String)
+class JsonPediaParser(inputWikiDump:String, lang:String)
                      (implicit val sc: SparkContext,implicit val sqlContext:SQLContext)
                      extends WikiPediaParser{
 
 
   val pageRDDs = parse(inputWikiDump)
-  val dfWikiRDD = parseJSON(pageRDDs)
+  val dfWikiRDD = parseJSON(pageRDDs).persist()
 
   /*
     Method to Begin the Parsing Logic
@@ -75,7 +75,6 @@ case class JsonPediaParser(inputWikiDump:String, lang:String)
   /*
      Method to Get the list of Surface forms from the wiki
    */
-
   def getSfs() : RDD[String] = {
 
     dfWikiRDD.select("wid","links.description")
@@ -97,6 +96,20 @@ case class JsonPediaParser(inputWikiDump:String, lang:String)
              })
              .filter(artRow => artRow._2.length > 0)
   }
+
+  /*
+   Logic to Get Surface Forms and URIs from the wikiDump
+   */
+  def getSfURI(): RDD[(Long,String,String)]= {
+
+    val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id")
+             .rdd
+             .map(artRow => (artRow.getLong(0),artRow.getList[String](1),artRow.getList[String](2)))
+             .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
+             .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
+    sfUriRDD
+
+  }
   /*
 
   Logic to Create Memory Token Store
@@ -107,7 +120,7 @@ case class JsonPediaParser(inputWikiDump:String, lang:String)
     val tokens = new Array[String](tokenTypes.size + 1)
     val counts = new Array[Int](tokenTypes.size + 1)
 
-    tokenTypes.foreach(token => {
+    tokenTypes.map(token => {
       tokens(token.id) = token.tokenType
       counts(token.id) = token.count
 
@@ -134,7 +147,7 @@ case class JsonPediaParser(inputWikiDump:String, lang:String)
 
     val tokenTypes = new ListBuffer[TokenType]()
     var i= 1
-    token.foreach(x =>{
+    token.map(x =>{
       val token = new TokenType(i,x,0)
       tokenTypes += token
       i += 1

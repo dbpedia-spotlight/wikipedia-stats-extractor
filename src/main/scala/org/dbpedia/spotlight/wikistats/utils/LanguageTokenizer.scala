@@ -14,7 +14,10 @@
  *  limitations under the License.
  */
 
-package org.dbpedia.spotlight.wikistats
+/*
+Class to serialize the contents used for creating language tokenizer
+ */
+package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
 

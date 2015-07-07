@@ -20,13 +20,14 @@ package org.dbpedia.spotlight.wikistats
 import java.util.Locale
 
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.{LanguageIndependentTokenizer, LanguageIndependentStringTokenizer}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
+import org.dbpedia.spotlight.wikistats.utils.LanguageTokenizer
 import scala.collection.JavaConversions._
-
 
 /*
 Class for computing various like uri, surface form and token Statistics on wikipedia dump
@@ -34,34 +35,6 @@ Class for computing various like uri, surface form and token Statistics on wikip
 
 class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
 
-  /*
-Method to Create Dataframe and parse the WikiIds from the JSON text
-*/
-  /*
-  def uriCounts(dfWikiRDD:DataFrame){
-
-    //Print the JSON Schema
-    //TODO - This is just for printing the Input JSON Schema. Will be removed at the end
-    dfWikiRDD.printSchema()
-
-    //Declaring a local variable to avoid Serializing the whole class
-    val language = lang
-
-    //Parse the individual WikiIds and create URI Counts
-    val dfSurfaceForms = dfWikiRDD.select("links.id")//.where("")
-                        .rdd
-                        .map(artRow => artRow.getList[String](0))
-                        .flatMap(articleIds => articleIds.map(id=>id))
-                        .mapPartitions{ wikiIds =>
-                                        val dbpediaEncode = new DBpediaUriEncode(language)
-                                        wikiIds.map(wikiId => (dbpediaEncode.uriEncode(wikiId),1))}
-                        .reduceByKey(_ + _)
-
-
-
-    dfSurfaceForms.foreach(println)
-  }
-  */
 
   /*
   Method to get the list of surface forms as an RDD from the FSA Spotter
@@ -70,20 +43,18 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
   def sfSpotter(wikipediaParser:JsonPediaParser): Unit={
 
 
-    //computeStats.sfCounts(wikipediaParser.getSfs())
     val allSfs = wikipediaParser.getSfs().collect().toList
 
     //Below Logic is to get Tokens from the list of Surface forms
     val tokens = wikipediaParser.getTokens()
 
-    //Creating MemoryTokenTypeStore for the list of Tokens
+    //Creating MemoryTokenTypeStore from the list of Tokens
     val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokens)
 
     //Broadcast TokenTypeStore for creating tokenizer inside MapPartitions
     val tokenTypeStoreBc = sc.broadcast(tokenTypeStore)
 
     val langTokenizer = new LanguageTokenizer(lang)
-    //Below logic is for building the FSA Dictionary to be used in FSA Spotter
     val lit = langTokenizer.litInstance(tokenTypeStore)
 
     //Creating dictionary broadcast
@@ -94,14 +65,15 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
     //Get wid and articleText for FSA spotter
     val textIdRDD = wikipediaParser.getArticleText()
 
-    textIdRDD.foreach(println)
+    //textIdRDD.foreach(println)
     //Implementing the FSA Spotter logic
 
     //Declaring value for avoiding the whole class to be serialized
     val language = lang
 
-    val totalSfs = textIdRDD.mapPartitions(textIds => {
-              //Extracting the surface forms from FSA Spotter
+    import sqlContext.implicits._
+    //Logic to get the Surface Forms from FSA Spotter
+    val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
               textIds.map(textId => {
                       val langTokenizer = new LanguageTokenizer(language)
                       val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
@@ -111,10 +83,29 @@ Method to Create Dataframe and parse the WikiIds from the JSON text
                       .map(sfOffset => (textId._1,sfOffset._1))
 
               })
+              .flatMap(idSf => idSf)
     })
 
-    totalSfs.foreach(println)
+    val totalSfDf = totalSfsRDD.toDF("wid", "sf")
+    val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf", "uri")
 
+    counts(uriSfDf,totalSfDf)
   }
 
+  /*
+  Method to Compute various counts on the WikiDump
+   */
+  def counts(uriSfDf:DataFrame, totalSfDf:DataFrame) = {
+
+    //Joining two Datasets
+    val joinedDf = uriSfDf.join(totalSfDf,(uriSfDf("wid") === totalSfDf("wid")) && (uriSfDf("sf") === totalSfDf("sf")),"left_outer")
+
+    //Get the URI Counts
+    val uriCounts = joinedDf
+                    .groupBy("uri")
+                    .agg("uri" -> "count")
+                    .rdd
+                    .collect().foreach(println)
+
+  }
 }

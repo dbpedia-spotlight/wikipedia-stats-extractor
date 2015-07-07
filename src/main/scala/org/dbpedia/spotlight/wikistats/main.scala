@@ -52,7 +52,7 @@ object main {
     val computeStats = new ComputeStats(lang)
 
     //Call FSA Spotter for getting the surface forms from article text
-    computeStats.sfSpotter(wikipediaParser)
+    val sfsSpotter = computeStats.sfSpotter(wikipediaParser)
 
 
 
