@@ -23,18 +23,33 @@ import java.util.Locale
 
 import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
-import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
+import org.dbpedia.spotlight.db.tokenize.{LanguageIndependentStringTokenizer, LanguageIndependentTokenizer}
+import org.dbpedia.spotlight.model.TokenType
 
-class LanguageTokenizer(lang:String) extends Serializable{
+class SpotlightUtils(lang:String) extends Serializable {
 
   val stemmer = new Stemmer()
   val locale = new Locale(lang)
   //TODO Change the below logic to implement actual Stop words instead of the sample.
   //Creating a sample StopWords
-  val stopWords = Set[String]("a","the","an","that")
+  val stopWords = Set[String]("a", "the", "an", "that")
 
-  def litInstance(tokenTypeStore:MemoryTokenTypeStore) : LanguageIndependentTokenizer = {
-    new LanguageIndependentTokenizer(stopWords,stemmer,locale,tokenTypeStore)
+}
+
+
+object SpotlightUtils{
+
+  def createLanguageIndependentTokenzier(lang:String,
+                                         tokenTypeStore:MemoryTokenTypeStore): LanguageIndependentTokenizer ={
+
+      val spotlightUtils = new SpotlightUtils(lang)
+
+      new LanguageIndependentTokenizer(spotlightUtils.stopWords,
+                                       spotlightUtils.stemmer,
+                                       spotlightUtils.locale,
+                                       tokenTypeStore)
   }
 
 }
+
+

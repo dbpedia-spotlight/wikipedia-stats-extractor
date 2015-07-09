@@ -22,7 +22,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
-import org.dbpedia.spotlight.wikistats.utils.LanguageTokenizer
+import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import scala.collection.JavaConversions._
 
 /*
@@ -42,7 +42,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     val allSfs = wikipediaParser.getSfs().collect().toList
 
     //Below Logic is to get Tokens from the list of Surface forms
-    val tokens = wikipediaParser.getTokens()
+    val tokens = wikipediaParser.getTokensInSfs()
 
     //Creating MemoryTokenTypeStore from the list of Tokens
     val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokens)
@@ -50,8 +50,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     //Broadcast TokenTypeStore for creating tokenizer inside MapPartitions
     val tokenTypeStoreBc = sc.broadcast(tokenTypeStore)
 
-    val langTokenizer = new LanguageTokenizer(lang)
-    val lit = langTokenizer.litInstance(tokenTypeStore)
+    val lit = SpotlightUtils.createLanguageIndependentTokenzier(lang,tokenTypeStore)
 
     //Creating dictionary broadcast
     val fsaDict = FSASpotter.buildDictionaryFromIterable(allSfs,lit)
@@ -71,16 +70,18 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     //Logic to get the Surface Forms from FSA Spotter
     val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
               textIds.map(textId => {
-                      val langTokenizer = new LanguageTokenizer(language)
                       val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
-                                                                          langTokenizer.litInstance(tokenTypeStoreBc.value))
-                      allOccFSASpotter
-                      .extract(textId._2)
-                      .map(sfOffset => (textId._1,sfOffset._1))
+                        SpotlightUtils.createLanguageIndependentTokenzier(language,tokenTypeStoreBc.value))
+                      allOccFSASpotter.extract(textId._2)
+                                      .map(sfOffset => (textId._1,sfOffset._1))
 
               })
               .flatMap(idSf => idSf)
     })
+
+    /*
+    Creating two Dataframes for computing various counts
+     */
 
     val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
@@ -139,12 +140,34 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
                           .count
 
 
-    val sfJoined = sfAnnotatedCounts
-                   .join(sfSpotterCounts,sfAnnotatedCounts("sf1") === sfSpotterCounts("sf2"),"left_outer")
-                   .rdd
-                   //.map(row => {
-                   //    (row.getString(0),row.getLong(1),row.getLong(3))
-                   //})
-                   .collect().foreach(println)
+    //Surface Form Counts
+    val sfCountsDf = sfAnnotatedCounts
+                     .join(sfSpotterCounts,sfAnnotatedCounts("sf1") === sfSpotterCounts("sf2"),"left_outer")
+
+    val sfCountsAnnotated  = sfCountsDf
+                             .rdd
+                             .map(row => (row.getString(0),row.getLong(1),row.get(3)))
+                             .map(row => if(row._3 == null) (row._1,row._2,1)
+                                         else row)
+                   //.collect().foreach(println)
+
+    import sqlContext.implicits._
+    //Sql Joining for finding the fake lowercase sfs
+
+    val sfTable = sfCountsDf.registerTempTable("SFTable")
+
+    val lowerCaseSf = sfCountsAnnotated.map(row => (row._1.toLowerCase,-1l,1))
+                      .toDF("sf","an","cn")
+                      .registerTempTable("SfLower")
+
+    val lowerCaseSfJoin = sqlContext.sql("Select distinct sf,an,cn from SfLower, SFTable where sf1 <> sf")
+                          .rdd
+                          .map(row => (row.getString(0),row.getLong(1),row.get(2)))
+
+    //Total Surface Form Counts
+
+    val sfCounts = sfCountsAnnotated.union(lowerCaseSfJoin).collect().foreach(println)
+
+
   }
 }

@@ -17,9 +17,7 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{Row, DataFrame}
 import org.dbpedia.spotlight.model.TokenType
 
 /*
@@ -35,7 +33,7 @@ trait WikiPediaParser {
   def getSfs() : RDD[String]
 
   //Method to build tokens from the list of Surface forms
-  def getTokens(): List[TokenType]
+  def getTokensInSfs(): List[TokenType]
 
   //Method to get the wid and article text from dataframe
   def getArticleText(): RDD[(Long,String)]

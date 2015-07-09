@@ -30,14 +30,15 @@ import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
-import scala.collection.mutable.ListBuffer
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
+Member variables -  1. Input Wikipedia Dump Path
+                    2. Language of the Wikipedia dump
  */
 class JsonPediaParser(inputWikiDump:String, lang:String)
                      (implicit val sc: SparkContext,implicit val sqlContext:SQLContext)
-                     extends WikiPediaParser{
+  extends WikiPediaParser{
 
 
   val pageRDDs = parse(inputWikiDump)
@@ -45,6 +46,8 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
   /*
     Method to Begin the Parsing Logic
+    Input:  - RDD of Individual article in JSON format
+    Output: - Dataframe of the input RDD
    */
   def parseJSON(pageRDDs:RDD[String]): DataFrame ={
 
@@ -55,6 +58,8 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
   /*
     Method to parse the XML dump into JSON
+    Input:  - Path of the Wikipedia dump
+    Output: - RDD of Individual article in JSON format
  */
   def parse(path: String): RDD[String] = {
 
@@ -74,39 +79,44 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
   /*
      Method to Get the list of Surface forms from the wiki
+    Input:  - None
+    Output: - RDD of all Surface forms from the wikipedia dump
    */
   def getSfs() : RDD[String] = {
 
     dfWikiRDD.select("wid","links.description")
-             .rdd
-             .map(artRow => (artRow.getList[String](1)))
-             .flatMap(sf => sf)
+      .rdd
+      .map(artRow => (artRow.getList[String](1)))
+      .flatMap(sf => sf)
   }
 
   /*
   Method to get the wid and article text from the wiki dump
+    Input:  - None
+    Output: - RDD of all wikiId and the article text
    */
-  //TODO Need to improve the filter condition of blank articles. we can include in the where clause of dataframe
   def getArticleText(): RDD[(Long,String)] = {
 
     dfWikiRDD.select("wid","wikiText")
-             .rdd
-             .map(artRow => {
-                 (artRow.getLong(0),artRow.getString(1))
-             })
-             .filter(artRow => artRow._2.length > 0)
+      .rdd
+      .map(artRow => {
+      (artRow.getLong(0),artRow.getString(1))
+    })
+      .filter(artRow => artRow._2.length > 0)
   }
 
   /*
    Logic to Get Surface Forms and URIs from the wikiDump
+    Input:  - None
+    Output: - RDD of wiki-id, surface forms and uri
    */
   def getSfURI(): RDD[(Long,String,String)]= {
 
     val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id")
-             .rdd
-             .map(artRow => (artRow.getLong(0),artRow.getList[String](1),artRow.getList[String](2)))
-             .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
-             .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
+      .rdd
+      .map(artRow => (artRow.getLong(0),artRow.getList[String](1),artRow.getList[String](2)))
+      .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
+      .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
     sfUriRDD
 
   }
@@ -136,7 +146,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
   /*
   Logic for building the memory type tokens
    */
-  def getTokens(): List[TokenType] ={
+  def getTokensInSfs(): List[TokenType] ={
 
     val stemmer = new Stemmer()
     val locale = new Locale(lang)
