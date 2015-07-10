@@ -36,7 +36,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
   Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
-  def buildCounts(wikipediaParser:JsonPediaParser): Unit={
+  def buildCounts(wikipediaParser:JsonPediaParser,stopWordLoc:String): Unit={
 
 
     val allSfs = wikipediaParser.getSfs().collect().toList
@@ -50,7 +50,9 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     //Broadcast TokenTypeStore for creating tokenizer inside MapPartitions
     val tokenTypeStoreBc = sc.broadcast(tokenTypeStore)
 
-    val lit = SpotlightUtils.createLanguageIndependentTokenzier(lang,tokenTypeStore)
+    val lit = SpotlightUtils.createLanguageIndependentTokenzier(lang,
+                                                                tokenTypeStore,
+                                                                stopWordLoc)
 
     //Creating dictionary broadcast
     val fsaDict = FSASpotter.buildDictionaryFromIterable(allSfs,lit)
@@ -71,7 +73,9 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
               textIds.map(textId => {
                       val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
-                        SpotlightUtils.createLanguageIndependentTokenzier(language,tokenTypeStoreBc.value))
+                        SpotlightUtils.createLanguageIndependentTokenzier(language,
+                                                                          tokenTypeStoreBc.value,
+                                                                          stopWordLoc))
                       allOccFSASpotter.extract(textId._2)
                                       .map(sfOffset => (textId._1,sfOffset._1))
 
@@ -166,7 +170,8 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
 
     //Total Surface Form Counts
 
-    val sfCounts = sfCountsAnnotated.union(lowerCaseSfJoin).collect().foreach(println)
+    val sfCounts = sfCountsAnnotated.union(lowerCaseSfJoin)
+
 
 
   }

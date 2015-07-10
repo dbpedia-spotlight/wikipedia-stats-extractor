@@ -31,6 +31,8 @@ object main {
     //TODO - Change the input file
     val inputWikiDump = "E:\\enwiki-pages-articles-latest.xml"
 
+    val stopWordLoc = "E:\\stopwords.en.list"
+
     val sparkConf = new SparkConf()
                     .setMaster("local[2]")
                     .setAppName("WikiStats")
@@ -56,7 +58,7 @@ object main {
     val computeStats = new ComputeStats(lang)
 
     //Call FSA Spotter for getting the surface forms from article text
-    val sfsSpotter = computeStats.buildCounts(wikipediaParser)
+    val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
 
 
 
