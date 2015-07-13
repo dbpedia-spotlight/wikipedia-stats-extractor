@@ -16,33 +16,43 @@
 
 package scala.org.dbpedia.spotlight.wikistats
 
-import com.holdenkarau.spark.testing.SharedSparkContext
+
 import org.apache.spark.sql.SQLContext
-import org.dbpedia.spotlight.wikistats.JsonPediaParser
-import org.scalatest.{Filter, FunSuite}
-import org.scalatest.Assertions._
+import org.dbpedia.spotlight.wikistats.{SharedSparkContext, JsonPediaParser}
+import org.scalatest.{BeforeAndAfter, FunSuite}
+
 
 /*
 Test Suite for testing the Spark Application funtionality
  */
 
-class TestSuite extends FunSuite with SharedSparkContext{
+class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
+  /*
+  Declaring common variables used across all the test cases
+   */
+  var inputWikiDump:String = _
+  var stopWordLoc:String = _
+  var lang:String = _
+
+  before {
+    inputWikiDump = "src/test/resources/enwiki-pages-articles-latest.xml"
+    stopWordLoc = "src/test/resources/stopwords.en.list"
+    lang = "en"
+
+  }
+
+  //Test case for verifying empty surface forms
   test("Testing Empty Surface forms"){
-    val inputWikiDump = "enwiki-pages-articles-latest.xml"
 
-    val stopWordLoc = "stopwords.en.list"
-    val lang = "en"
+    implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    wikipediaParser.getSfs().collect().toList.foreach{sf => assert(sf.isEmpty)}
+    wikipediaParser.getSfs().collect().toList.foreach(sf => assert(!sf.isEmpty))
+
   }
 
-
-  override def expectedTestCount(filter:Filter): Int ={
-    return 1
-  }
 
 }

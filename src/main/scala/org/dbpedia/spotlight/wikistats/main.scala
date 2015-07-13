@@ -54,6 +54,7 @@ object main {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
+    wikipediaParser.getSfs().collect().foreach(println)
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
