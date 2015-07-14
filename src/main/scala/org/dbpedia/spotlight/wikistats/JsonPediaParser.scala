@@ -17,21 +17,37 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import java.util.Locale
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{Text, LongWritable}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
+import org.dbpedia.spotlight.db.model.Stemmer
+import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
+import org.dbpedia.spotlight.model.TokenType
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
-
+import scala.collection.JavaConversions._
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
+Member variables -  1. Input Wikipedia Dump Path
+                    2. Language of the Wikipedia dump
  */
-class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sqlContext:SQLContext) extends WikiPediaParser{
+class JsonPediaParser(inputWikiDump:String, lang:String)
+                     (implicit val sc: SparkContext,implicit val sqlContext:SQLContext)
+  extends WikiPediaParser{
+
+
+  val pageRDDs = parse(inputWikiDump)
+  val dfWikiRDD = parseJSON(pageRDDs).persist()
 
   /*
     Method to Begin the Parsing Logic
+    Input:  - RDD of Individual article in JSON format
+    Output: - Dataframe of the input RDD
    */
   def parseJSON(pageRDDs:RDD[String]): DataFrame ={
 
@@ -42,8 +58,10 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
 
   /*
     Method to parse the XML dump into JSON
+    Input:  - Path of the Wikipedia dump
+    Output: - RDD of Individual article in JSON format
  */
-  def parse(path: String, sc: SparkContext): RDD[String] = {
+  def parse(path: String): RDD[String] = {
 
     val conf = new Configuration()
 
@@ -58,6 +76,89 @@ class JsonPediaParser(lang:String)(implicit val sc: SparkContext,implicit val sq
     rawXmls.map(p => p._2.toString)
   }
 
+
+  /*
+     Method to Get the list of Surface forms from the wiki
+    Input:  - None
+    Output: - RDD of all Surface forms from the wikipedia dump
+   */
+  def getSfs() : RDD[String] = {
+
+    dfWikiRDD.select("wid","links.description")
+      .rdd
+      .map(artRow => (artRow.getList[String](1)))
+      .flatMap(sf => sf)
+  }
+
+  /*
+  Method to get the wid and article text from the wiki dump
+    Input:  - None
+    Output: - RDD of all wikiId and the article text
+   */
+  def getArticleText(): RDD[(Long,String)] = {
+
+    dfWikiRDD.select("wid","wikiText")
+      .rdd
+      .map(artRow => {
+      (artRow.getLong(0),artRow.getString(1))
+    })
+      .filter(artRow => artRow._2.length > 0)
+  }
+
+  /*
+   Logic to Get Surface Forms and URIs from the wikiDump
+    Input:  - None
+    Output: - RDD of wiki-id, surface forms and uri
+   */
+  def getSfURI(): RDD[(Long,String,String)]= {
+
+    val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id")
+      .rdd
+      .map(artRow => (artRow.getLong(0),artRow.getList[String](1),artRow.getList[String](2)))
+      .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
+      .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
+    sfUriRDD
+
+  }
+  /*
+
+  Logic to Create Memory Token Store
+   */
+  def createTokenTypeStore(tokenTypes:List[TokenType]): MemoryTokenTypeStore =  {
+
+    val tokenTypeStore = new MemoryTokenTypeStore()
+    val tokens = new Array[String](tokenTypes.size + 1)
+    val counts = new Array[Int](tokenTypes.size + 1)
+
+    tokenTypes.map(token => {
+      tokens(token.id) = token.tokenType
+      counts(token.id) = token.count
+
+    })
+
+    tokenTypeStore.tokenForId  = tokens.array
+    tokenTypeStore.counts = counts.array
+    tokenTypeStore.loaded()
+
+    return tokenTypeStore
+  }
+
+  /*
+  Logic for building the memory type tokens
+   */
+  def getTokensInSfs(): List[TokenType] ={
+
+    val stemmer = new Stemmer()
+    val locale = new Locale(lang)
+    val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
+    //Below Logic is for creating Token Store from the Surface forms
+    //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
+    val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
+
+    val tokenTypes=token.zip(Stream from 1).map{case (x,i) => new TokenType(i,x,0)}
+
+    tokenTypes
+  }
 
 
 }

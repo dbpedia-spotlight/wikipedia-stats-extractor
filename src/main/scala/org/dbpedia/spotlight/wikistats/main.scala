@@ -17,8 +17,9 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import org.apache.spark.SparkContext
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
+import scala.collection.JavaConversions._
 
 /*
 Entry point for Code Execution
@@ -30,8 +31,16 @@ object main {
     //TODO - Change the input file
     val inputWikiDump = "E:\\enwiki-pages-articles-latest.xml"
 
+    val stopWordLoc = "E:\\stopwords.en.list"
+
+    val sparkConf = new SparkConf()
+                    .setMaster("local[2]")
+                    .setAppName("WikiStats")
+                    .set("spark.sql.shuffle.partitions","10")
+
     //TODO - Initialize with Proper Spark Settings
-    implicit val sc = new SparkContext("local","FirstTestApp","E:\\ApacheSpark\\spark-1.4.0-bin-hadoop2.6\\bin")
+    implicit val sc = new SparkContext(sparkConf)
+
 
     //Wikipedia Dump Language
     //TODO - To Change in future to pass the language as input arguments. Defaulting to English for testing
@@ -43,23 +52,18 @@ object main {
     /*
     Parsing and Processing Starts from here
      */
-    val wikipediaParser = new JsonPediaParser(lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    //Read the Wikipedia XML Dump and store each page in JSON format as an element of RDD
-    val pageRDDs = wikipediaParser.parse(inputWikiDump,sc)
-
-    //Logic to create Json dataframe from the Base RDD
-    val dfWikiRDD = wikipediaParser.parseJSON(pageRDDs)
-
+    wikipediaParser.getSfs().collect().foreach(println)
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
-    computeStats.uriCounts(dfWikiRDD)
+    //Call FSA Spotter for getting the surface forms from article text
+    val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+
+
 
   }
-
-
-
 
 
 }

@@ -17,24 +17,7 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import org.apache.spark.rdd.RDD
-import org.dbpedia.spotlight.model.TokenType
 
-/*
-WikiPedia Parser trait which can be extended to include any parsers
- */
+class TestWikiCounts {
 
-trait WikiPediaParser {
-
-  //Method to parse the RawWikiPedia dump and return RDD of Strings
-  def parse(path: String): RDD[String]
-
-  //Method to get the list of Surface forms from the wikiDump
-  def getSfs() : RDD[String]
-
-  //Method to build tokens from the list of Surface forms
-  def getTokensInSfs(): List[TokenType]
-
-  //Method to get the wid and article text from dataframe
-  def getArticleText(): RDD[(Long,String)]
 }
