@@ -30,6 +30,7 @@ import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
+import scala.collection.immutable.HashMap
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
@@ -74,6 +75,41 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
       classOf[Text], conf)
 
     rawXmls.map(p => p._2.toString)
+  }
+
+  /*
+    Get Redirects from the wiki dump
+    Input:   - Base dataframe consiting of wiki data
+    Output:  - RDD with Redirect source and target
+   */
+  def redirectsWikiArticles(): RDD[(String,String)] = {
+
+    dfWikiRDD.select("wikiTitle","type","redirect","links.description")
+    .rdd
+    .filter(row => row.getString(1)== "REDIRECT")
+    .map(row => (row.getString(0),row.getString(2) + "~" + row.getList(3).head.toString))
+
+  }
+
+
+  def resolveRedirects(): Unit = {
+
+    val rddRedirects = redirectsWikiArticles()
+
+    val hashMap = new HashMap[String,String]
+    rddRedirects.foreach(row => (hashMap + row._1,row._2))
+
+    val mapBc = sc.broadcast(hashMap)
+
+    val redirectsClosure = rddRedirects
+
+    redirectsClosure.mapPartitions(rowPart => rowPart.map{row =>
+                        { val value = mapBc.value.get(row._2.split("~").head)
+                          value match
+                            case None =>
+
+                        }}
+    )
   }
 
 
@@ -140,7 +176,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     tokenTypeStore.counts = counts.array
     tokenTypeStore.loaded()
 
-    return tokenTypeStore
+    tokenTypeStore
   }
 
   /*

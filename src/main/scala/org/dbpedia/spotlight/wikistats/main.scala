@@ -54,12 +54,16 @@ object main {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    wikipediaParser.getSfs().collect().foreach(println)
+    /*
+    Added for testing
+    TODO: Need to remove at the end
+     */
+    wikipediaParser.resolveRedirects()
     //Logic to calculate various counts
-    val computeStats = new ComputeStats(lang)
+    //val computeStats = new ComputeStats(lang)
 
     //Call FSA Spotter for getting the surface forms from article text
-    val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    //val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
 
 
 
