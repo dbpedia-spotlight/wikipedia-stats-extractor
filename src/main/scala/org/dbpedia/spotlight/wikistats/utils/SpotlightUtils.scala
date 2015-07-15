@@ -21,9 +21,11 @@ package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
 
+import org.apache.spark.broadcast.Broadcast
 import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
+import scala.collection.immutable
 import scala.io.Source
 
 

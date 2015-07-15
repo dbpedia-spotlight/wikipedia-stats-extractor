@@ -39,7 +39,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
   def buildCounts(wikipediaParser:JsonPediaParser,stopWordLoc:String): Unit={
 
 
-    val allSfs = wikipediaParser.getSfs().collect().toList
+    val allSfs = wikipediaParser.getSfs().collect().toList ::: wikipediaParser.resolveRedirects().collect().toList
 
     //Below Logic is to get Tokens from the list of Surface forms
     val tokens = wikipediaParser.getTokensInSfs()

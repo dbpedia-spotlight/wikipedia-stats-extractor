@@ -28,9 +28,9 @@ import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
+import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
-import scala.collection.immutable.HashMap
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
@@ -84,32 +84,29 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
    */
   def redirectsWikiArticles(): RDD[(String,String)] = {
 
-    dfWikiRDD.select("wikiTitle","type","redirect","links.description")
+    dfWikiRDD.select("wikiTitle","type","redirect")
     .rdd
     .filter(row => row.getString(1)== "REDIRECT")
-    .map(row => (row.getString(0),row.getString(2) + "~" + row.getList(3).head.toString))
+    .map(row => (row.getString(0),row.getString(2)))
 
   }
 
 
-  def resolveRedirects(): Unit = {
+  def resolveRedirects(): RDD[String] = {
 
     val rddRedirects = redirectsWikiArticles()
+    var linkMap = collection.mutable.Map[String, String]()
+    rddRedirects.foreach(row => linkMap.update(row._1,row._2))
 
-    val hashMap = new HashMap[String,String]
-    rddRedirects.foreach(row => (hashMap + row._1,row._2))
+    rddRedirects.foreach(x => println(x._1,x._2))
 
-    val mapBc = sc.broadcast(hashMap)
+    val mapBc = sc.broadcast(linkMap)
 
-    val redirectsClosure = rddRedirects
+    rddRedirects.mapPartitions(rows => {
+                              val redirectUtil = new RedirectUtil(mapBc.value)
+                              rows.map { row => redirectUtil.getEndOfChainURI(row._1).toString
+                              }})
 
-    redirectsClosure.mapPartitions(rowPart => rowPart.map{row =>
-                        { val value = mapBc.value.get(row._2.split("~").head)
-                          value match
-                            case None =>
-
-                        }}
-    )
   }
 
 
@@ -120,8 +117,9 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
    */
   def getSfs() : RDD[String] = {
 
-    dfWikiRDD.select("wid","links.description")
+    dfWikiRDD.select("wid","links.description","type")
       .rdd
+      .filter(row => row.getString(2)== "ARTICLE")
       .map(artRow => (artRow.getList[String](1)))
       .flatMap(sf => sf)
   }
@@ -133,8 +131,9 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
    */
   def getArticleText(): RDD[(Long,String)] = {
 
-    dfWikiRDD.select("wid","wikiText")
+    dfWikiRDD.select("wid","wikiText","type")
       .rdd
+      .filter(row => row.getString(2)== "ARTICLE")
       .map(artRow => {
       (artRow.getLong(0),artRow.getString(1))
     })
@@ -148,8 +147,9 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
    */
   def getSfURI(): RDD[(Long,String,String)]= {
 
-    val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id")
+    val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id","type")
       .rdd
+      .filter(row => row.getString(3)== "ARTICLE")
       .map(artRow => (artRow.getLong(0),artRow.getList[String](1),artRow.getList[String](2)))
       .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
       .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
