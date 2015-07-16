@@ -168,9 +168,9 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     dfWikiRDD.select("type","paragraphsLink")
       .rdd
       .filter(row => row.getString(0)== "ARTICLE")
-      .map(row => (row.getList(1)))
+      .map(row => (row.getList[(ArrayBuffer[Any],Any)](1)))
+      //.map(row => row.getList(1))
       .flatMap(row => row)
-      //.map(row => row)
       .collect().foreach(println)
 
   }
