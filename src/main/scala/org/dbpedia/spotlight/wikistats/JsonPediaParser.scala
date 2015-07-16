@@ -31,6 +31,7 @@ import org.dbpedia.spotlight.model.TokenType
 import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
+import scala.collection.mutable.{ArrayBuffer, HashMap}
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
@@ -91,24 +92,27 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
   }
 
-
-  def resolveRedirects(): RDD[String] = {
+  /*
+    Method to resolve transitive dependencies for the redirects.
+    Input:  - None
+    Output: - RDD with the resolved wiki uri and surface form
+   */
+  def getResolveRedirects(): RDD[(String,String)] = {
 
     val rddRedirects = redirectsWikiArticles()
-    var linkMap = collection.mutable.Map[String, String]()
-    rddRedirects.foreach(row => linkMap.update(row._1,row._2))
+    var linkMap = sc.accumulableCollection(HashMap[String,String]())
 
-    rddRedirects.foreach(x => println(x._1,x._2))
+    rddRedirects.foreach(row => {linkMap += (row._1 -> row._2)})
 
-    val mapBc = sc.broadcast(linkMap)
+    val mapBc = sc.broadcast(linkMap.value)
+
 
     rddRedirects.mapPartitions(rows => {
                               val redirectUtil = new RedirectUtil(mapBc.value)
-                              rows.map { row => redirectUtil.getEndOfChainURI(row._1).toString
+                              rows.map { row => (redirectUtil.getEndOfChainURI(row._1),row._1)
                               }})
 
   }
-
 
   /*
      Method to Get the list of Surface forms from the wiki
@@ -156,9 +160,25 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     sfUriRDD
 
   }
-  /*
 
-  Logic to Create Memory Token Store
+  /*
+    Method to get the paragraph and the links associated with each paragraph
+   */
+  def getUriParagraphs(): Unit = {
+    dfWikiRDD.select("type","paragraphsLink")
+      .rdd
+      .filter(row => row.getString(0)== "ARTICLE")
+      .map(row => (row.getList(1)))
+      .flatMap(row => row)
+      //.map(row => row)
+      .collect().foreach(println)
+
+  }
+
+  /*
+   Logic to create the Memory Token Store
+    Input:  - List of all Token types
+    Output: - Memory Store with the Token information
    */
   def createTokenTypeStore(tokenTypes:List[TokenType]): MemoryTokenTypeStore =  {
 
@@ -180,8 +200,11 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
   }
 
   /*
-  Logic for building the memory type tokens
+   Logic to get the list of all the tokens in the Surface forms
+    Input:  - None
+    Output: - List of different token types
    */
+
   def getTokensInSfs(): List[TokenType] ={
 
     val stemmer = new Stemmer()

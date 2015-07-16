@@ -19,6 +19,7 @@ package org.dbpedia.spotlight.wikistats
 
 
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
@@ -33,13 +34,13 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
 
 
   /*
-  Method to get the list of surface forms as an RDD from the FSA Spotter
+  Encapsulated Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
   def buildCounts(wikipediaParser:JsonPediaParser,stopWordLoc:String): Unit={
 
 
-    val allSfs = wikipediaParser.getSfs().collect().toList ::: wikipediaParser.resolveRedirects().collect().toList
+    val allSfs = wikipediaParser.getSfs().collect().toList
 
     //Below Logic is to get Tokens from the list of Surface forms
     val tokens = wikipediaParser.getTokensInSfs()
@@ -90,70 +91,99 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
-    counts(uriSfDf,totalSfDf)
-  }
-
-  /*
-  Method to Compute various counts on the WikiDump
-   */
-  def counts(uriSfDf:DataFrame, totalSfDf:DataFrame) = {
 
     //Joining two Datasets
     val joinedDf = uriSfDf.join(totalSfDf,(uriSfDf("wid") === totalSfDf("wid"))
-                                && (uriSfDf("sf1") === totalSfDf("sf2")),"left_outer")
+        && (uriSfDf("sf1") === totalSfDf("sf2")),"left_outer")
+                             .select("uri","sf1")
+                             .unionAll(wikipediaParser.getResolveRedirects.toDF("uri","sf1"))
 
+    computeUriCounts(joinedDf)
+
+    computePairCounts(joinedDf)
+
+    computeTotalSfs(totalSfDf, uriSfDf)
+  }
+
+  /*
+    Method to compute URI Counts on the WikiDump
+    Input:  - Dataframe with the Uri and Surface form information
+    Output: - RDD with the Uris and count
+   */
+
+  def computeUriCounts(joinedDf:DataFrame): RDD[(String,Long)] = {
+
+    //Local variable to avoid serializing the whole object
     val language = lang
-    //Get the URI Counts
 
-    val uriCounts = joinedDf
-                    .groupBy("uri")
-                    .count
-                    .rdd
-                    .map(row => {
-                        (row.getString(0),row.getLong(1))
-                    })
-                    .mapPartitions(uris => {
-                                  val dbpediaEncode = new DBpediaUriEncode(language)
-                                  uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
+      joinedDf
+      .groupBy("uri")
+      .count
+      .rdd
+      .map(row => {
+      (row.getString(0),row.getLong(1))
+    })
+      .mapPartitions(uris => {
+      val dbpediaEncode = new DBpediaUriEncode(language)
+      uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
 
-                    })
-                    //.collect().foreach(println)
+    })
+  }
 
-    //Pair Counts
-    val pairCounts  = joinedDf
-                      .groupBy("sf1","uri")
-                      .count
-                      .rdd
-                      .map(row => {
-                          (row.getString(0),row.getString(1),row.getLong(2))
-                      })
-                      .mapPartitions(urisfs => {
-                                    val dbpediaEncode = new DBpediaUriEncode(language)
-                                    urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
+  /*
+    Method to compute Pair Counts on the WikiDump
+    Input:  - Dataframe with the Uri and Surface form information
+    Output: - RDD with the Uris and Surface form counts
+   */
 
-                      })
-                      //.collect().foreach(println)
+  def computePairCounts(joinedDf:DataFrame): RDD[(String,String,Long)] =  {
+
+    //Local variable to avoid serializing the whole object
+    val language = lang
+
+      joinedDf
+      .groupBy("sf1","uri")
+      .count
+      .rdd
+      .map(row => {
+      (row.getString(0),row.getString(1),row.getLong(2))
+    })
+      .mapPartitions(urisfs => {
+      val dbpediaEncode = new DBpediaUriEncode(language)
+      urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
+
+    })
+    //.collect().foreach(println)
+  }
+
+  /*
+    Method to compute total Surface form Counts on the WikiDump
+    Input:  - Dataframe with the Uri and Surface form information
+    Output: - RDD with the surface forms, annotated counts and total counts
+   */
+
+  def computeTotalSfs(totalSfDf:DataFrame, uriSfDf:DataFrame): Unit = {
 
     //Surface Form Counts Logic
     val sfAnnotatedCounts = uriSfDf
-                            .groupBy("sf1")
-                            .count
+      .groupBy("sf1")
+      .count
 
     val sfSpotterCounts = totalSfDf
-                          .groupBy("sf2")
-                          .count
+      .groupBy("sf2")
+      .count
 
 
     //Surface Form Counts
     val sfCountsDf = sfAnnotatedCounts
-                     .join(sfSpotterCounts,sfAnnotatedCounts("sf1") === sfSpotterCounts("sf2"),"left_outer")
+      .join(sfSpotterCounts,sfAnnotatedCounts("sf1") === sfSpotterCounts("sf2"),"left_outer")
 
     val sfCountsAnnotated  = sfCountsDf
-                             .rdd
-                             .map(row => (row.getString(0),row.getLong(1),row.get(3)))
-                             .map(row => if(row._3 == null) (row._1,row._2,1)
-                                         else row)
-                   //.collect().foreach(println)
+      .rdd
+      .map(row => (row.getString(0),row.getLong(1),row.get(3)))
+      .map(row => if(row._3 == null) (row._1,row._2,1)
+    else row)
+    //.collect().foreach(println)
 
     import sqlContext.implicits._
     //Sql Joining for finding the fake lowercase sfs
@@ -161,18 +191,17 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     val sfTable = sfCountsDf.registerTempTable("SFTable")
 
     val lowerCaseSf = sfCountsAnnotated.map(row => (row._1.toLowerCase,-1l,1))
-                      .toDF("sf","an","cn")
-                      .registerTempTable("SfLower")
+      .toDF("sf","an","cn")
+      .registerTempTable("SfLower")
 
     val lowerCaseSfJoin = sqlContext.sql("Select distinct sf,an,cn from SfLower, SFTable where sf1 <> sf")
-                          .rdd
-                          .map(row => (row.getString(0),row.getLong(1),row.get(2)))
+      .rdd
+      .map(row => (row.getString(0),row.getLong(1),row.get(2)))
 
     //Total Surface Form Counts
 
     val sfCounts = sfCountsAnnotated.union(lowerCaseSfJoin)
 
-
-
   }
+
 }
