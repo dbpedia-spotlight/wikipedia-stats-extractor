@@ -23,15 +23,16 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{Text, LongWritable}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.sql._
 import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
-import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
+import org.dbpedia.spotlight.wikistats.utils.{ParagraphLink, Link, RedirectUtil}
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
-import scala.collection.mutable.{ArrayBuffer, HashMap}
+import scala.collection.mutable.HashMap
+
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
@@ -128,6 +129,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
       .flatMap(sf => sf)
   }
 
+
   /*
   Method to get the wid and article text from the wiki dump
     Input:  - None
@@ -162,19 +164,27 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
   }
 
   /*
-    Method to get the paragraph and the links associated with each paragraph
+   Logic to get Links and paragraph text as RDD
+    Input:  - None
+    Output: - RDD with the paragraph links and the text
    */
-  def getUriParagraphs(): Unit = {
-    dfWikiRDD.select("type","paragraphsLink")
-      .rdd
-      .filter(row => row.getString(0)== "ARTICLE")
-      .map(row => (row.getList[(ArrayBuffer[Any],Any)](1)))
-      //.map(row => row.getList(1))
-      .flatMap(row => row)
-      .collect().foreach(println)
+  def getUriParagraphs(): RDD[ParagraphLink] = {
+
+
+    dfWikiRDD.select("paragraphsLink").rdd.map{
+      row =>
+        row.getAs[Seq[Row]](0).map{r =>
+          ParagraphLink(r.getSeq[Link](0),r.getString(1))}
+    }.flatMap(row => row)
+    .filter(para => para.links.size > 0)
 
   }
+  def getUriParagraphs1(): Unit = {
 
+    import org.apache.spark.sql.functions._
+    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("lin")).rdd.collect().foreach(println)
+
+  }
   /*
    Logic to create the Memory Token Store
     Input:  - List of all Token types

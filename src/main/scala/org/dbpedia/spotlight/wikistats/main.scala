@@ -55,11 +55,11 @@ object main {
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
     //Logic to calculate various counts
-    //val computeStats = new ComputeStats(lang)
+    val computeStats = new ComputeStats(lang)
 
     //Call FSA Spotter for getting the surface forms from article text
     //val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
-    wikipediaParser.getUriParagraphs()
+    wikipediaParser.getUriParagraphs1()
 
 
 

@@ -103,6 +103,12 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     computePairCounts(joinedDf)
 
     computeTotalSfs(totalSfDf, uriSfDf)
+
+    //Below Logic is to compute Token Counts
+
+    //wikipediaParser.getUriParagraphs()
+    //  .flatMap{paraLink => paraLink.getIds()}
+    //  .collect().foreach(println)
   }
 
   /*
