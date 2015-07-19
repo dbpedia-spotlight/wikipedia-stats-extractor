@@ -24,15 +24,16 @@ import org.apache.hadoop.io.{Text, LongWritable}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
+import org.apache.spark.sql.functions._
+import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
-import org.dbpedia.spotlight.wikistats.utils.{ParagraphLink, Link, RedirectUtil}
+import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
 import scala.collection.mutable.HashMap
-
 
 /*
 Class to Parse the Raw WikiPedia dump into individual JSON format articles
@@ -45,7 +46,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
 
   val pageRDDs = parse(inputWikiDump)
-  val dfWikiRDD = parseJSON(pageRDDs).persist()
+  val dfWikiRDD = parseJSON(pageRDDs).persist(StorageLevel.MEMORY_AND_DISK)
 
   /*
     Method to Begin the Parsing Logic
@@ -55,7 +56,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
   def parseJSON(pageRDDs:RDD[String]): DataFrame ={
 
     //Create Initial DataFrame by Parsing using JSONRDD. This is from Spark 1.3 onwards
-    sqlContext.jsonRDD(pageRDDs)
+    sqlContext.read.json(pageRDDs)
 
   }
 
@@ -125,7 +126,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     dfWikiRDD.select("wid","links.description","type")
       .rdd
       .filter(row => row.getString(2)== "ARTICLE")
-      .map(artRow => (artRow.getList[String](1)))
+      .map(artRow => artRow.getList[String](1))
       .flatMap(sf => sf)
   }
 
@@ -153,6 +154,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
    */
   def getSfURI(): RDD[(Long,String,String)]= {
 
+    /*
     val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id","type")
       .rdd
       .filter(row => row.getString(3)== "ARTICLE")
@@ -160,6 +162,14 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
       .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
       .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
     sfUriRDD
+    */
+
+    dfWikiRDD.select(new Column("wid"),new Column("type"),explode( new Column("links")).as("link"))
+      .select("type","wid","link.description","link.end","link.id","link.start")
+      .rdd
+      .filter(row => row.getString(0)== "ARTICLE")
+      .filter(row => !(row.getLong(3)==0 && row.getLong(5)==0))
+      .map(row => (row.getLong(1),row.getString(2),row.getString(4)))
 
   }
 
@@ -168,23 +178,16 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     Input:  - None
     Output: - RDD with the paragraph links and the text
    */
-  def getUriParagraphs(): RDD[ParagraphLink] = {
-
-
-    dfWikiRDD.select("paragraphsLink").rdd.map{
-      row =>
-        row.getAs[Seq[Row]](0).map{r =>
-          ParagraphLink(r.getSeq[Link](0),r.getString(1))}
-    }.flatMap(row => row)
-    .filter(para => para.links.size > 0)
-
-  }
-  def getUriParagraphs1(): Unit = {
+  def getUriParagraphs(): RDD[(String,String)] = {
 
     import org.apache.spark.sql.functions._
-    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("lin")).rdd.collect().foreach(println)
+
+    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"))
+      .select(explode(new Column("paraLink.links.id")).as("id"),new Column("paraLink.paraText"))
+      .map(row => (row.getString(0),row.getString(1)))
 
   }
+
   /*
    Logic to create the Memory Token Store
     Input:  - List of all Token types

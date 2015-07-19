@@ -17,34 +17,30 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
-import scala.collection.JavaConversions._
 
 /*
 Entry point for Code Execution
  */
+
 object main {
 
   def main(args: Array[String]): Unit ={
 
-    //TODO - Change the input file
-    val inputWikiDump = "E:\\enwiki-pages-articles-latest.xml"
-
-    val stopWordLoc = "E:\\stopwords.en.list"
+    //Setting the input parameters
+    val inputWikiDump = args(0)
+    val stopWordLoc = args(1)
+    val lang = args(2)
+    val stemmerString = args(3)
 
     val sparkConf = new SparkConf()
                     .setMaster("local[2]")
                     .setAppName("WikiStats")
                     .set("spark.sql.shuffle.partitions","10")
 
-    //TODO - Initialize with Proper Spark Settings
     implicit val sc = new SparkContext(sparkConf)
-
-
-    //Wikipedia Dump Language
-    //TODO - To Change in future to pass the language as input arguments. Defaulting to English for testing
-    val lang = "en"
 
     //Initializing SqlContext for Use in Operating on DataFrames
     implicit val sqlContext = new SQLContext(sc)
@@ -57,9 +53,23 @@ object main {
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
-    //Call FSA Spotter for getting the surface forms from article text
-    //val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
-    wikipediaParser.getUriParagraphs1()
+    //Logic to build surface Form dataframes to be used for wiki stats counts
+    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+
+    val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2).persist(StorageLevel.MEMORY_AND_DISK)
+
+
+    //Uri Counts
+    computeStats.computeUriCounts(joinedDf)
+
+    //Pair Counts
+    computeStats.computePairCounts(joinedDf)
+
+    //Total Surface Form counts
+    computeStats.computeTotalSfs(sfDfs._1, sfDfs._2)
+
+    //Token Counts
+    computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString).collect().foreach(println)
 
 
 

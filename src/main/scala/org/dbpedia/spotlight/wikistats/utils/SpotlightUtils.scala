@@ -21,11 +21,9 @@ package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
 
-import org.apache.spark.broadcast.Broadcast
 import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
-import scala.collection.immutable
 import scala.io.Source
 
 
@@ -33,8 +31,9 @@ object SpotlightUtils extends Serializable{
 
   def createLanguageIndependentTokenzier(lang:String,
                                          tokenTypeStore:MemoryTokenTypeStore,
-                                         stopWordLoc:String): LanguageIndependentTokenizer ={
-    val stemmer = new Stemmer()
+                                         stopWordLoc:String,
+                                         stemmer:Stemmer): LanguageIndependentTokenizer ={
+
     val locale = new Locale(lang)
 
     val stopWords = createStopWordsSet(stopWordLoc)
@@ -47,9 +46,9 @@ object SpotlightUtils extends Serializable{
 
   def createStopWordsSet(stopWordLoc:String): Set[String] = {
 
-    val stopWords = Source.fromFile(stopWordLoc).getLines().toSet
-    stopWords
+    Source.fromFile(stopWordLoc).getLines().toSet
   }
+
 }
 
 
