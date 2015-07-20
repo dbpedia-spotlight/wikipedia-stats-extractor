@@ -23,6 +23,7 @@ import java.util.Locale
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
@@ -100,7 +101,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
     val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
-    (totalSfDf,uriSfDf)
+    (totalSfDf.persist(StorageLevel.MEMORY_ONLY_SER),uriSfDf.persist(StorageLevel.MEMORY_ONLY_SER))
   }
 
   /*
@@ -221,7 +222,7 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
 
   def computeTokenCounts(uriParaText:RDD[(String,String)],
                          stopWordLoc:String,
-                          stemmerString:String): RDD[(String,Iterable[(String,Long)])] = {
+                          stemmerString:String): RDD[(String,String)] = {
 
     import sqlContext.implicits._
 
@@ -245,8 +246,8 @@ class ComputeStats(lang:String) (implicit val sc: SparkContext,implicit val sqlC
       {
       val dbpediaEncode = new DBpediaUriEncode(language)
       rows.map(row =>
-      (dbpediaEncode.wikiUriEncode(row.getString(0)),(row.getString(1),row.getLong(2))))}}
-    .groupByKey()
+      (dbpediaEncode.wikiUriEncode(row.getString(0)),(row.getString(1),row.getLong(2)).toString()))}}
+    .reduceByKey(_ + _)
 
   }
 }

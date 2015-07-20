@@ -45,8 +45,8 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
   extends WikiPediaParser{
 
 
-  val pageRDDs = parse(inputWikiDump)
-  val dfWikiRDD = parseJSON(pageRDDs).persist(StorageLevel.MEMORY_AND_DISK)
+  val pageRDDs = parse(inputWikiDump).persist(StorageLevel.MEMORY_AND_DISK)
+  val dfWikiRDD = parseJSON(pageRDDs)
 
   /*
     Method to Begin the Parsing Logic
