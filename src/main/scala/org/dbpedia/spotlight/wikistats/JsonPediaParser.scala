@@ -40,8 +40,8 @@ Class to Parse the Raw WikiPedia dump into individual JSON format articles
 Member variables -  1. Input Wikipedia Dump Path
                     2. Language of the Wikipedia dump
  */
-class JsonPediaParser(inputWikiDump:String, lang:String)
-                     (implicit val sc: SparkContext,implicit val sqlContext:SQLContext)
+class JsonPediaParser(inputWikiDump: String, lang: String)
+                     (implicit val sc: SparkContext,implicit val sqlContext: SQLContext)
   extends WikiPediaParser{
 
 
@@ -53,7 +53,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     Input:  - RDD of Individual article in JSON format
     Output: - Dataframe of the input RDD
    */
-  def parseJSON(pageRDDs:RDD[String]): DataFrame ={
+  def parseJSON(pageRDDs: RDD[String]): DataFrame ={
 
     //Create Initial DataFrame by Parsing using JSONRDD. This is from Spark 1.3 onwards
     sqlContext.read.json(pageRDDs)
@@ -85,12 +85,12 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     Input:   - Base dataframe consiting of wiki data
     Output:  - RDD with Redirect source and target
    */
-  def redirectsWikiArticles(): RDD[(String,String)] = {
+  def redirectsWikiArticles(): RDD[(String, String)] = {
 
     dfWikiRDD.select("wikiTitle","type","redirect")
-    .rdd
-    .filter(row => row.getString(1)== "REDIRECT")
-    .map(row => (row.getString(0),row.getString(2)))
+      .rdd
+      .filter(row => row.getString(1)== "REDIRECT")
+      .map(row => (row.getString(0),row.getString(2)))
 
   }
 
@@ -99,7 +99,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     Input:  - None
     Output: - RDD with the resolved wiki uri and surface form
    */
-  def getResolveRedirects(): RDD[(String,String)] = {
+  def getResolveRedirects(): RDD[(String, String)] = {
 
     val rddRedirects = redirectsWikiArticles()
     var linkMap = sc.accumulableCollection(HashMap[String,String]())
@@ -110,9 +110,9 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
 
     rddRedirects.mapPartitions(rows => {
-                              val redirectUtil = new RedirectUtil(mapBc.value)
-                              rows.map { row => (redirectUtil.getEndOfChainURI(row._1),row._1)
-                              }})
+      val redirectUtil = new RedirectUtil(mapBc.value)
+      rows.map { row => (redirectUtil.getEndOfChainURI(row._1),row._1)
+      }})
 
   }
 
@@ -136,7 +136,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     Input:  - None
     Output: - RDD of all wikiId and the article text
    */
-  def getArticleText(): RDD[(Long,String)] = {
+  def getArticleText(): RDD[(Long, String)] = {
 
     dfWikiRDD.select("wid","wikiText","type")
       .rdd
@@ -152,17 +152,7 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     Input:  - None
     Output: - RDD of wiki-id, surface forms and uri
    */
-  def getSfURI(): RDD[(Long,String,String)]= {
-
-    /*
-    val sfUriRDD = dfWikiRDD.select("wid","links.description","links.id","type")
-      .rdd
-      .filter(row => row.getString(3)== "ARTICLE")
-      .map(artRow => (artRow.getLong(0),artRow.getList[String](1),artRow.getList[String](2)))
-      .map{case (wid,sfArray,uriArray) => (wid,sfArray.zip(uriArray))}
-      .flatMap{case (wid,uriSf) => for(x <- uriSf) yield (wid,x._1,x._2)}
-    sfUriRDD
-    */
+  def getSfURI(): RDD[(Long,String, String)]= {
 
     dfWikiRDD.select(new Column("wid"),new Column("type"),explode( new Column("links")).as("link"))
       .select("type","wid","link.description","link.end","link.id","link.start")
@@ -188,18 +178,27 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
 
   }
 
+  def getRawWikiText(): Unit ={
+
+    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"))
+      .select(explode(new Column("paraLink.links")).as("link"),new Column("paraLink.paraText")).collect().foreach(println)
+      //.map(row => (row.getString(0),row.getString(1)))
+  }
   /*
    Logic to create the Memory Token Store
     Input:  - List of all Token types
     Output: - Memory Store with the Token information
    */
-  def createTokenTypeStore(tokenTypes:List[TokenType]): MemoryTokenTypeStore =  {
+  def createTokenTypeStore(tokenTypes: List[TokenType]): MemoryTokenTypeStore =  {
 
     val tokenTypeStore = new MemoryTokenTypeStore()
     val tokens = new Array[String](tokenTypes.size + 1)
     val counts = new Array[Int](tokenTypes.size + 1)
 
+    println ("Naveen in tokentypes:")
+
     tokenTypes.map(token => {
+      println (token.id)
       tokens(token.id) = token.tokenType
       counts(token.id) = token.count
 
@@ -227,7 +226,10 @@ class JsonPediaParser(inputWikiDump:String, lang:String)
     //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
     val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
 
+
     val tokenTypes=token.zip(Stream from 1).map{case (x,i) => new TokenType(i,x,0)}
+
+    //tokenTypes.foreach(x => println (x.toString()))
 
     tokenTypes
   }

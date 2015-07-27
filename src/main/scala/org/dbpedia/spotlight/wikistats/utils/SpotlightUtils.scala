@@ -29,10 +29,10 @@ import scala.io.Source
 
 object SpotlightUtils extends Serializable{
 
-  def createLanguageIndependentTokenzier(lang:String,
-                                         tokenTypeStore:MemoryTokenTypeStore,
-                                         stopWordLoc:String,
-                                         stemmer:Stemmer): LanguageIndependentTokenizer ={
+  def createLanguageIndependentTokenzier(lang: String,
+                                         tokenTypeStore: MemoryTokenTypeStore,
+                                         stopWordLoc: String,
+                                         stemmer: Stemmer): LanguageIndependentTokenizer ={
 
     val locale = new Locale(lang)
 
