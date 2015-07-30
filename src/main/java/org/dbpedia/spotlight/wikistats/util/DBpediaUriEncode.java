@@ -17,11 +17,8 @@
 
 package org.dbpedia.spotlight.wikistats.util;
 
-//import org.dbpedia.spotlight.util.WikiUtil;
-
 import org.dbpedia.extraction.util.WikiUtil;
 
-import java.io.Serializable;
 import java.util.regex.Pattern;
 /*
 Class used to Encode wiki Uri
@@ -59,5 +56,22 @@ public class DBpediaUriEncode {
 
         String encoded = WikiUtil.wikiEncode(id);
         return this.dbpediaUriPrefix + encoded;
+    }
+
+    /*
+    Method to Check the WikiID and create the corresponding DBpedia url
+     */
+    public String wikiUriEncode(String id){
+
+        id = id.replace(this.wikipediaUrlPrefix, "");
+        id = id.replace(this.dbpediaUriPrefix, "");
+        id = id.replace(this.dbpediaCanonicalUriPrefix, "");
+
+        if (percentEncodedPattern.matcher(id).find()) {
+            id = WikiUtil.wikiDecode(id);
+        }
+
+        String encoded = WikiUtil.wikiEncode(id);
+        return this.wikipediaUrlPrefix + encoded;
     }
 }

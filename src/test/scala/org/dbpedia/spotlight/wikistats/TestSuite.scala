@@ -18,7 +18,8 @@ package scala.org.dbpedia.spotlight.wikistats
 
 
 import org.apache.spark.sql.SQLContext
-import org.dbpedia.spotlight.wikistats.{SharedSparkContext, JsonPediaParser}
+import org.apache.spark.storage.StorageLevel
+import org.dbpedia.spotlight.wikistats.{ComputeStats, SharedSparkContext, JsonPediaParser}
 import org.scalatest.{BeforeAndAfter, FunSuite}
 
 
@@ -52,6 +53,62 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
     wikipediaParser.getSfs().collect().toList.foreach(sf => assert(!sf.isEmpty))
 
+  }
+
+
+  //Test case for verifying Redirects
+  test("Counting Redirects"){
+    implicit val sc = sc_implicit
+    implicit val sqlContext = new SQLContext(sc)
+
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+
+    assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==10)
+  }
+
+  //Test case for resolving redirects
+  test("Validating Redirects to Source Article"){
+
+    implicit val sc = sc_implicit
+    implicit val sqlContext = new SQLContext(sc)
+    inputWikiDump = "src/test/resources/enwiki-pages-redirects.xml"
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+
+    assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==2)
+
+    //Test for transitive dependencies
+    wikipediaParser.getResolveRedirects()
+      .map(row=>row._1)
+      .collect()
+      .toList
+      .foreach(redirect => assert(redirect=="Computer_accessibility"))
+
+  }
+
+  //Test case for varifying annotated counts in the Total Surface form counts
+  test("Verifying Annotated Counts from the WikiDump"){
+    implicit val sc = sc_implicit
+    implicit val sqlContext = new SQLContext(sc)
+
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+
+    val totalLinks = wikipediaParser.getSfURI().map(row => row._3).collect().toList.size
+
+    val computeStats = new ComputeStats(lang)
+
+    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+
+    var annotatedCounts = 0l
+    computeStats.computeTotalSfs(sfDfs._1,sfDfs._2)
+      .map(row => row._2)
+      .collect()
+      .toList
+      .foreach(count => {
+           if (count == -1) annotatedCounts += 0
+           else annotatedCounts +=count
+    })
+
+    assert(totalLinks==annotatedCounts)
   }
 
 

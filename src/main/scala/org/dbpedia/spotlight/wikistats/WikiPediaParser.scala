@@ -18,6 +18,7 @@
 package org.dbpedia.spotlight.wikistats
 
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.DataFrame
 import org.dbpedia.spotlight.model.TokenType
 
 /*
@@ -26,7 +27,7 @@ WikiPedia Parser trait which can be extended to include any parsers
 
 trait WikiPediaParser {
 
-  //Method to parse the RawWikiPedia dump and return RDD of Strings
+  //Method to parse the RawWikiPedia dump and return RDD of wiki Article details
   def parse(path: String): RDD[String]
 
   //Method to get the list of Surface forms from the wikiDump
@@ -37,4 +38,16 @@ trait WikiPediaParser {
 
   //Method to get the wid and article text from dataframe
   def getArticleText(): RDD[(Long,String)]
+
+  //Method to parse XML to JSON and return a Dataframe
+  def parseJSON(pageRDDs:RDD[String]): DataFrame
+
+  //Method to compute redirects
+  def redirectsWikiArticles(): RDD[(String,String)]
+
+  //Method to resolve redirects
+  def getResolveRedirects(): RDD[(String,String)]
+
+  //Method to URI and paragraph text
+  def getUriParagraphs(): RDD[(String,String)]
 }

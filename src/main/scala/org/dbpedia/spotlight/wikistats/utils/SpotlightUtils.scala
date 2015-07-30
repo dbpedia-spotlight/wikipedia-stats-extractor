@@ -29,10 +29,11 @@ import scala.io.Source
 
 object SpotlightUtils extends Serializable{
 
-  def createLanguageIndependentTokenzier(lang:String,
-                                         tokenTypeStore:MemoryTokenTypeStore,
-                                         stopWordLoc:String): LanguageIndependentTokenizer ={
-    val stemmer = new Stemmer()
+  def createLanguageIndependentTokenzier(lang: String,
+                                         tokenTypeStore: MemoryTokenTypeStore,
+                                         stopWordLoc: String,
+                                         stemmer: Stemmer): LanguageIndependentTokenizer ={
+
     val locale = new Locale(lang)
 
     val stopWords = createStopWordsSet(stopWordLoc)
@@ -45,9 +46,9 @@ object SpotlightUtils extends Serializable{
 
   def createStopWordsSet(stopWordLoc:String): Set[String] = {
 
-    val stopWords = Source.fromFile(stopWordLoc).getLines().toSet
-    stopWords
+    Source.fromFile(stopWordLoc).getLines().toSet
   }
+
 }
 
 

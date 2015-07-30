@@ -17,34 +17,42 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
-import scala.collection.JavaConversions._
 
 /*
 Entry point for Code Execution
  */
+
 object main {
 
   def main(args: Array[String]): Unit ={
 
-    //TODO - Change the input file
-    val inputWikiDump = "E:\\enwiki-pages-articles-latest.xml"
-
-    val stopWordLoc = "E:\\stopwords.en.list"
+    //Setting the input parameters
+    val inputWikiDump = args(0)
+    val stopWordLoc = args(1)
+    val lang = args(2)
+    val outputPath = args(3)
+    val stemmerString = args(4)
 
     val sparkConf = new SparkConf()
-                    .setMaster("local[2]")
+                    //.setMaster("local[5]")
                     .setAppName("WikiStats")
-                    .set("spark.sql.shuffle.partitions","10")
+                    //.set("spark.sql.shuffle.partitions","6")
 
-    //TODO - Initialize with Proper Spark Settings
+    //sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    //sparkConf.set("spark.storage.memoryFraction", "0.5")
+    //sparkConf.set("spark.driver.memory","6g")
+    //sparkConf.set("spark.shuffle.consolidateFiles","true")
+    //sparkConf.set("spark.broadcast.blockSize","128m")
+    //sparkConf.set("spark.default.parallelism","6")
+    //sparkConf.set("spark.eventLog.enabled","true")
+    //sparkConf.set("spark.reducer.maxSizeInFlight","128m")
+    //sparkConf.set("spark.shuffle.file.buffer","1m")
+    //sparkConf.set("spark.executor.memory","1g")
+
     implicit val sc = new SparkContext(sparkConf)
-
-
-    //Wikipedia Dump Language
-    //TODO - To Change in future to pass the language as input arguments. Defaulting to English for testing
-    val lang = "en"
 
     //Initializing SqlContext for Use in Operating on DataFrames
     implicit val sqlContext = new SQLContext(sc)
@@ -54,15 +62,36 @@ object main {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    wikipediaParser.getSfs().collect().foreach(println)
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
-    //Call FSA Spotter for getting the surface forms from article text
-    val sfsSpotter = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    //Logic to build surface Form dataframes to be used for wiki stats counts
+    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+
+    val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
+
+    val joinedDfPersist = joinedDf
+                          .persist(StorageLevel.MEMORY_ONLY_SER)
+
+    //Uri Counts
+    computeStats.computeUriCounts(joinedDfPersist).saveAsTextFile(outputPath + "UriCounts")
+
+    //Pair Counts
+    computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
+
+    joinedDfPersist.unpersist()
+    //Total Surface Form counts
+    computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
+
+    sfDfs._1.unpersist()
+    sfDfs._2.unpersist()
+
+    //Token Counts
+    computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)
+      .saveAsTextFile(outputPath + "TokenCounts")
 
 
-
+    sc.stop()
   }
 
 

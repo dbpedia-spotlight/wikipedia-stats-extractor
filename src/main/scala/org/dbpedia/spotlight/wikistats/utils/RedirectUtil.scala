@@ -14,10 +14,18 @@
  *  limitations under the License.
  */
 
+package org.dbpedia.spotlight.wikistats.utils
 
-package org.dbpedia.spotlight.wikistats
 
+class RedirectUtil(map:collection.mutable.Map[String,String]) extends Serializable{
 
-class TestWikiCounts {
+  //Get the resolved Redirect
+  def getEndOfChainURI(uri: String): String = getEndOfChainURI(uri, Set())
+
+  private def getEndOfChainURI(uri: String, alreadyTraversed:Set[String]): String = map.get(uri) match {
+    case Some(s: String) => if (alreadyTraversed.contains(s)) s else getEndOfChainURI(s, alreadyTraversed + s)
+    case None => uri
+  }
+
 
 }
