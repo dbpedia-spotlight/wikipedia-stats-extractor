@@ -61,34 +61,33 @@ object main {
     Parsing and Processing Starts from here
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
-    wikipediaParser.dfWikiRDD.printSchema()
+    wikipediaParser.getUriParagraphs1()
     //Logic to calculate various counts
-    val computeStats = new ComputeStats(lang)
+    //val computeStats = new ComputeStats(lang)
 
     //Logic to build surface Form dataframes to be used for wiki stats counts
-    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    //val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
 
-    val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
+    //val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
 
-    val joinedDfPersist = joinedDf
-                          .persist(StorageLevel.MEMORY_ONLY_SER)
+    //val joinedDfPersist = joinedDf.persist(StorageLevel.MEMORY_ONLY_SER)
 
     //Uri Counts
-    computeStats.computeUriCounts(joinedDfPersist).saveAsTextFile(outputPath + "UriCounts")
+    //computeStats.computeUriCounts(joinedDfPersist).saveAsTextFile(outputPath + "UriCounts")
 
     //Pair Counts
-    computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
+    //computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
 
     //joinedDfPersist.unpersist()
     //Total Surface Form counts
-    computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
+    //computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
 
     //sfDfs._1.unpersist()
     //sfDfs._2.unpersist()
 
     //Token Counts
-    computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)
-      .saveAsTextFile(outputPath + "TokenCounts")
+    //computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)
+    //  .saveAsTextFile(outputPath + "TokenCounts")
 
 
     sc.stop()

@@ -251,4 +251,40 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
       .reduceByKey(_ + _)
 
   }
+
+
+
+
+
+  def computeTokenCounts1(uriParaText: RDD[(String,String)],
+                         stopWordLoc: String,
+                         stemmerString: String): RDD[(String, String)] = {
+
+    import sqlContext.implicits._
+
+    val language = lang
+    uriParaText.mapPartitions(part => {
+
+      val snowballStemmer = new SnowballStemmer(stemmerString)
+      val locale = new Locale(language)
+      val list = new LanguageIndependentStringTokenizer(locale,snowballStemmer)
+
+      val stemStopWords = collection.mutable.Set[String]()
+      SpotlightUtils.createStopWordsSet(stopWordLoc).foreach(word =>
+        list.tokenize(word).foreach(stemWord => stemStopWords += stemWord))
+
+      part.flatMap(row => list.tokenize(row._2).filter(!stemStopWords.contains(_)).toList.map(token => (row._1,token)))
+    }).toDF("uri","token")
+      .groupBy("uri","token")
+      .count
+      .rdd
+      .mapPartitions{rows =>
+    {
+      val dbpediaEncode = new DBpediaUriEncode(language)
+      rows.map(row =>
+        (dbpediaEncode.wikiUriEncode(row.getString(0)),(row.getString(1),row.getLong(2)).toString()))}}
+      .reduceByKey(_ + _)
+
+  }
+
 }

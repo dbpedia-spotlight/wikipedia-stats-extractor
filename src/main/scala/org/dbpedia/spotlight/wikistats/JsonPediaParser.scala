@@ -179,6 +179,17 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   }
 
+  def getUriParagraphs1(): RDD[(List[String],String)] = {
+
+    import org.apache.spark.sql.functions._
+
+    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"),new Column("type"))
+      .select("paraLink.links.id","paraLink.paraText","type")
+      .rdd
+      .filter(row => { (row.getString(2) == "ARTICLE") && (row.getList[String](0).size() > 0) })
+      .map(row => (row.getList[String](0),row.getString(1)))
+
+  }
   def getRawWikiText(): Unit ={
 
     val language = lang
