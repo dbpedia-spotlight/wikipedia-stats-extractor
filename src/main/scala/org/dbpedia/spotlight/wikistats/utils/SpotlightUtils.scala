@@ -20,12 +20,10 @@ Class to serialize the contents used for creating language tokenizer
 package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
-
-import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
 import scala.io.Source
-
+import org.dbpedia.spotlight.model.TokenType
 
 object SpotlightUtils extends Serializable{
 
@@ -47,6 +45,33 @@ object SpotlightUtils extends Serializable{
   def createStopWordsSet(stopWordLoc:String): Set[String] = {
 
     Source.fromFile(stopWordLoc).getLines().toSet
+  }
+
+  /*
+ Logic to create the Memory Token Store
+  Input:  - List of all Token types
+  Output: - Memory Store with the Token information
+ */
+  def createTokenTypeStore(tokenTypes: List[TokenType]): MemoryTokenTypeStore =  {
+
+    val tokenTypeStore = new MemoryTokenTypeStore()
+    val tokens = new Array[String](tokenTypes.size + 1)
+    val counts = new Array[Int](tokenTypes.size + 1)
+
+    println ("Naveen in tokentypes:")
+
+    tokenTypes.map(token => {
+      println (token.id)
+      tokens(token.id) = token.tokenType
+      counts(token.id) = token.count
+
+    })
+
+    tokenTypeStore.tokenForId  = tokens.array
+    tokenTypeStore.counts = counts.array
+    tokenTypeStore.loaded()
+
+    tokenTypeStore
   }
 
 }

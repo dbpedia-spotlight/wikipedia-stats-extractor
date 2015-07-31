@@ -45,14 +45,14 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   def buildCounts(wikipediaParser: JsonPediaParser,stopWordLoc: String): (DataFrame, DataFrame)={
 
-
     val allSfs = wikipediaParser.getSfs().collect().toList
-
+    println ("All sfs count")
+    println(allSfs.size)
     //Below Logic is to get Tokens from the list of Surface forms
     val tokens = wikipediaParser.getTokensInSfs()
 
     //Creating MemoryTokenTypeStore from the list of Tokens
-    val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokens)
+    val tokenTypeStore = SpotlightUtils.createTokenTypeStore(tokens)
 
     //Broadcast TokenTypeStore for creating tokenizer inside MapPartitions
     val tokenTypeStoreBc = sc.broadcast(tokenTypeStore)
@@ -67,7 +67,6 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     val fsaDict = FSASpotter.buildDictionaryFromIterable(allSfs,lit)
     val fsaDictBc = sc.broadcast(fsaDict)
 
-
     //Get wid and articleText for FSA spotter
     val textIdRDD = wikipediaParser.getArticleText()
 
@@ -77,17 +76,18 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     //Declaring value for avoiding the whole class to be serialized
     val language = lang
 
-    println ("Naveen before the FSA spotter logic")
     import sqlContext.implicits._
     //Logic to get the Surface Forms from FSA Spotter
     val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
+
+      val stemmer = new Stemmer()
+      val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
+        SpotlightUtils.createLanguageIndependentTokenzier(language,
+          tokenTypeStoreBc.value,
+          stopWordLoc,
+          stemmer))
+
       textIds.map(textId => {
-        val stemmer = new Stemmer()
-        val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
-          SpotlightUtils.createLanguageIndependentTokenzier(language,
-            tokenTypeStoreBc.value,
-            stopWordLoc,
-            stemmer))
         allOccFSASpotter.extract(textId._2)
           .map(sfOffset => (textId._1,sfOffset._1))
 
@@ -95,7 +95,6 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
         .flatMap(idSf => idSf)
     })
 
-    println ("Naveen before returning the two dfs")
     /*
     Creating two surface form dataframes for computing various counts
      */

@@ -30,6 +30,7 @@ import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
+import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
@@ -180,35 +181,22 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   def getRawWikiText(): Unit ={
 
-    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"))
-      .select(explode(new Column("paraLink.links")).as("link"),new Column("paraLink.paraText")).collect().foreach(println)
-      //.map(row => (row.getString(0),row.getString(1)))
-  }
-  /*
-   Logic to create the Memory Token Store
-    Input:  - List of all Token types
-    Output: - Memory Store with the Token information
-   */
-  def createTokenTypeStore(tokenTypes: List[TokenType]): MemoryTokenTypeStore =  {
+    val language = lang
+    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"),new Column ("wid"),new Column("type"))
+    .select("type","wid","paraLink.links","paraLink.paraText")
+    .rdd
+    .filter(row => row.getString(0)== "ARTICLE")
+    .map(row => (row.getLong(1),row.getList[String](2),row.getString(3)))
+    .map(row => {
 
-    val tokenTypeStore = new MemoryTokenTypeStore()
-    val tokens = new Array[String](tokenTypes.size + 1)
-    val counts = new Array[Int](tokenTypes.size + 1)
+      val dbpediaEncode = new DBpediaUriEncode(language)
+      row._2.map(sf => {
+        val sfDet = sf.split(",")
+        //row._3.
 
-    println ("Naveen in tokentypes:")
-
-    tokenTypes.map(token => {
-      println (token.id)
-      tokens(token.id) = token.tokenType
-      counts(token.id) = token.count
-
+      })
     })
 
-    tokenTypeStore.tokenForId  = tokens.array
-    tokenTypeStore.counts = counts.array
-    tokenTypeStore.loaded()
-
-    tokenTypeStore
   }
 
   /*
@@ -230,6 +218,9 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     val tokenTypes=token.zip(Stream from 1).map{case (x,i) => new TokenType(i,x,0)}
 
     //tokenTypes.foreach(x => println (x.toString()))
+    //tokenTypes.foreach(x => println (x.id,x.tokenType,x.count))
+    println("Printing Tokens")
+    println(tokenTypes.size)
 
     tokenTypes
   }

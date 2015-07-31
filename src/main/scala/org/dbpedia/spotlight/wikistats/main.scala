@@ -37,9 +37,9 @@ object main {
     val stemmerString = args(4)
 
     val sparkConf = new SparkConf()
-                    //.setMaster("local[5]")
+                    .setMaster("local[5]")
                     .setAppName("WikiStats")
-                    //.set("spark.sql.shuffle.partitions","6")
+                    .set("spark.sql.shuffle.partitions","6")
 
     //sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     //sparkConf.set("spark.storage.memoryFraction", "0.5")
@@ -61,7 +61,7 @@ object main {
     Parsing and Processing Starts from here
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
-
+    wikipediaParser.dfWikiRDD.printSchema()
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
 
@@ -79,12 +79,12 @@ object main {
     //Pair Counts
     computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
 
-    joinedDfPersist.unpersist()
+    //joinedDfPersist.unpersist()
     //Total Surface Form counts
     computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
 
-    sfDfs._1.unpersist()
-    sfDfs._2.unpersist()
+    //sfDfs._1.unpersist()
+    //sfDfs._2.unpersist()
 
     //Token Counts
     computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)
