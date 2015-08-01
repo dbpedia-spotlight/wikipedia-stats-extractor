@@ -49,5 +49,5 @@ trait WikiPediaParser {
   def getResolveRedirects(): RDD[(String,String)]
 
   //Method to URI and paragraph text
-  def getUriParagraphs(): RDD[(String,String)]
+  def getUriParagraphs(): RDD[(java.util.List[String],String)]
 }
