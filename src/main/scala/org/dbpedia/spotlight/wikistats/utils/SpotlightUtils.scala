@@ -22,8 +22,10 @@ package org.dbpedia.spotlight.wikistats.utils
 import java.util.Locale
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
+import collection.mutable
 import scala.io.Source
 import org.dbpedia.spotlight.model.TokenType
+
 
 object SpotlightUtils extends Serializable{
 
@@ -61,7 +63,6 @@ object SpotlightUtils extends Serializable{
     println ("Naveen in tokentypes:")
 
     tokenTypes.map(token => {
-      println (token.id)
       tokens(token.id) = token.tokenType
       counts(token.id) = token.count
 
@@ -72,6 +73,42 @@ object SpotlightUtils extends Serializable{
     tokenTypeStore.loaded()
 
     tokenTypeStore
+  }
+
+  /*
+      Logic to concatnate two strings with the space. This function is used the reduceByKey operation
+      to contact two paragraphs.
+      Input:  - Two Strings to concatenate
+      Output: - Concatenated String with Space
+  */
+
+
+  def stringConcat (str1: String, str2: String): String = {
+
+    str1 + " " + str2
+
+  }
+
+  /*
+    Logic to counts the Tokens in a List
+    to contact two paragraphs.
+    Input:  - List of tokens
+    Output: - List of tokens, count
+  */
+
+  def countTokens(tokens: List[String]): List[(String,Int)] = {
+
+    val tokenMap = new mutable.HashMap[String, Int]()
+    tokens.map( token => {
+      if (tokenMap.contains(token)) {
+         val value = tokenMap.getOrElse(token,0)
+         tokenMap.put(token, value + 1)
+      }
+      else
+         tokenMap.put(token,1)
+    })
+
+    tokenMap.toList
   }
 
 }

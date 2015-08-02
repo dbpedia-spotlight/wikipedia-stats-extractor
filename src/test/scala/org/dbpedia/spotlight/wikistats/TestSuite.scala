@@ -113,8 +113,8 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
       .collect()
       .toList
       .foreach(count => {
-           if (count == -1) annotatedCounts += 0
-           else annotatedCounts +=count
+      if (count == -1) annotatedCounts += 0
+      else annotatedCounts +=count
     })
 
     assert(totalLinks==annotatedCounts)

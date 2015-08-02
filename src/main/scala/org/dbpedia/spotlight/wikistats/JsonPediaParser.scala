@@ -26,12 +26,10 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.storage.StorageLevel
-import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
-import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
-import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
+import org.dbpedia.spotlight.wikistats.utils.{SpotlightUtils, RedirectUtil}
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
 import scala.collection.mutable.HashMap
@@ -74,6 +72,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     conf.set(XmlInputFormat.START_TAG_KEY, "<page>")
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     conf.set(XmlInputFormat.LANG,lang)
+    conf.set("dfs.block.size","134217728")
 
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
       classOf[Text], conf)
@@ -170,19 +169,21 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     Output: - RDD with the paragraph links and the text
    */
 
-  def getUriParagraphs(): RDD[(java.util.List[String],String)] = {
+  def getUriParagraphs(): RDD[(String,String)] = {
 
     import org.apache.spark.sql.functions._
 
-    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"),new Column("type"))
-      .select("paraLink.links.id","paraLink.paraText","type")
+    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"))
+      .select(explode(new Column("paraLink.links.id")).as("id"),new Column("paraLink.paraText").as("para"))
+      .distinct
       .rdd
-      .filter(row => {(row.getString(2) == "ARTICLE") && (row.getList[String](0).size() > 0)})
-      .map(row => (row.getList[String](0),row.getString(1)))
+      .map(row => (row.getString(0),row.getString(1)))
+      .reduceByKey(SpotlightUtils.stringConcat)
 
   }
 
 
+/*
   def getRawWikiText(): Unit ={
 
     val language = lang
@@ -202,6 +203,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     })
 
   }
+*/
 
   /*
    Logic to get the list of all the tokens in the Surface forms

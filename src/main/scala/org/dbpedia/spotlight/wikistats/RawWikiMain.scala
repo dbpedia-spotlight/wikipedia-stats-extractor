@@ -48,7 +48,9 @@ object RawWikiMain {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    wikipediaParser.getRawWikiText()
+    /*
+    Write Logic - Incomplete
+     */
     sc.stop()
   }
 

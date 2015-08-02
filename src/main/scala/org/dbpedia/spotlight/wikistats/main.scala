@@ -41,17 +41,6 @@ object main {
                     .setAppName("WikiStats")
                     //.set("spark.sql.shuffle.partitions","6")
 
-    //sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    //sparkConf.set("spark.storage.memoryFraction", "0.5")
-    //sparkConf.set("spark.driver.memory","6g")
-    //sparkConf.set("spark.shuffle.consolidateFiles","true")
-    //sparkConf.set("spark.broadcast.blockSize","128m")
-    //sparkConf.set("spark.default.parallelism","6")
-    //sparkConf.set("spark.eventLog.enabled","true")
-    //sparkConf.set("spark.reducer.maxSizeInFlight","128m")
-    //sparkConf.set("spark.shuffle.file.buffer","1m")
-    //sparkConf.set("spark.executor.memory","1g")
-
     implicit val sc = new SparkContext(sparkConf)
 
     //Initializing SqlContext for Use in Operating on DataFrames
@@ -66,28 +55,24 @@ object main {
     val computeStats = new ComputeStats(lang)
 
     //Logic to build surface Form dataframes to be used for wiki stats counts
-    //val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
 
-    //val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
+    val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
 
-    //val joinedDfPersist = joinedDf.persist(StorageLevel.MEMORY_ONLY_SER)
+    val joinedDfPersist = joinedDf.persist(StorageLevel.MEMORY_AND_DISK)
 
     //Uri Counts
-    //computeStats.computeUriCounts(joinedDfPersist).saveAsTextFile(outputPath + "UriCounts")
+    computeStats.computeUriCounts(joinedDfPersist).saveAsTextFile(outputPath + "UriCounts")
 
     //Pair Counts
-    //computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
+    computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
 
-    //joinedDfPersist.unpersist()
     //Total Surface Form counts
-    //computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
-
-    //sfDfs._1.unpersist()
-    //sfDfs._2.unpersist()
+    computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
 
     //Token Counts
     computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)
-      //.saveAsTextFile(outputPath + "TokenCounts")
+      .saveAsTextFile(outputPath + "TokenCounts")
 
     sc.stop()
   }

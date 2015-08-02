@@ -29,7 +29,6 @@ import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
-import scala.collection.JavaConversions._
 import org.dbpedia.spotlight.db.stem.SnowballStemmer
 
 /*
@@ -102,7 +101,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
-    (totalSfDf.persist(StorageLevel.MEMORY_ONLY_SER),uriSfDf.persist(StorageLevel.MEMORY_ONLY_SER))
+    (totalSfDf.persist(StorageLevel.MEMORY_AND_DISK),uriSfDf.persist(StorageLevel.MEMORY_AND_DISK))
   }
 
   /*
@@ -215,52 +214,32 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   }
 
-
-
   /*
     Method to compute total Surface form Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the surface forms, annotated counts and total counts
+    Input:  - RDD with uri and the paragraphs where it is annotated
+    Output: - RDD with uri and Tokens
    */
 
-
-  def computeTokenCounts(uriParaText: RDD[(java.util.List[String],String)],
+  def computeTokenCounts(uriParaText: RDD[(String,String)],
                          stopWordLoc: String,
-                         stemmerString: String): Unit = {
+                         stemmerString: String): RDD[(String,List[(String,Int)])] = {
 
     import sqlContext.implicits._
 
     val language = lang
-    val uriTokenRDD = uriParaText.mapPartitions(part => {
+    uriParaText.mapPartitions(part => {
 
       val snowballStemmer = new SnowballStemmer(stemmerString)
       val locale = new Locale(language)
       val list = new LanguageIndependentStringTokenizer(locale,snowballStemmer)
-
+      val dbpediaEncode = new DBpediaUriEncode(language)
       val stemStopWords = collection.mutable.Set[String]()
       SpotlightUtils.createStopWordsSet(stopWordLoc).foreach(word =>
         list.tokenize(word).foreach(stemWord => stemStopWords += stemWord))
 
-      part.flatMap(row => list.tokenize(row._2).filter(!stemStopWords.contains(_)).toList.map(token =>
-        {row._1.map(id =>  (id,token))}))
-        .flatMap(row => row)
-    }).toDF("uri","token")
-      .groupBy("uri","token")
-      .count
-      .rdd
+      part.map(row => (dbpediaEncode.wikiUriEncode(row._1),SpotlightUtils.countTokens(list.tokenize(row._2).filter(!stemStopWords.contains(_)).toList)))
 
-    print (uriTokenRDD.collect())
-      //.map(row => row.toString())
-/*
-    uriTokenRDD.mapPartitions{rows =>
-    {
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      rows.map(row =>
-        (dbpediaEncode.wikiUriEncode(row.getString(0)),(row.getString(1),row.getLong(2)).toString()))}
-      }
-      .reduceByKey(_ + _)
-*/
-    //uriTokenRDD.map(row => (row.getString(0),(row.getString(1),row.getLong(2)).toString)).reduceByKey(_ + _)
+    })
 
   }
 
