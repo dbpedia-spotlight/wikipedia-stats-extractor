@@ -20,10 +20,10 @@ Class to serialize the contents used for creating language tokenizer
 package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
+import java.io.File
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
 import collection.mutable
-import scala.io.Source
 import org.dbpedia.spotlight.model.TokenType
 
 
@@ -36,8 +36,7 @@ object SpotlightUtils extends Serializable{
 
     val locale = new Locale(lang)
 
-    val stopWords = createStopWordsSet(stopWordLoc)
-
+    val stopWords = Set.empty[String]
     new LanguageIndependentTokenizer(stopWords,
                                      stemmer,
                                      locale,
@@ -45,8 +44,8 @@ object SpotlightUtils extends Serializable{
   }
 
   def createStopWordsSet(stopWordLoc:String): Set[String] = {
+    scala.io.Source.fromFile(new File(stopWordLoc)).getLines().map(_.trim()).toSet
 
-    Source.fromFile(stopWordLoc).getLines().toSet
   }
 
   /*
@@ -59,8 +58,6 @@ object SpotlightUtils extends Serializable{
     val tokenTypeStore = new MemoryTokenTypeStore()
     val tokens = new Array[String](tokenTypes.size + 1)
     val counts = new Array[Int](tokenTypes.size + 1)
-
-    println ("Naveen in tokentypes:")
 
     tokenTypes.map(token => {
       tokens(token.id) = token.tokenType
@@ -85,7 +82,7 @@ object SpotlightUtils extends Serializable{
 
   def stringConcat (str1: String, str2: String): String = {
 
-    str1 + " " + str2
+    new mutable.StringBuilder(str1).append(" ").append(str2).toString()
 
   }
 
@@ -111,6 +108,16 @@ object SpotlightUtils extends Serializable{
     tokenMap.toList
   }
 
+  /*
+  Below logic is to merge two lists to be used by reduceByKey operation
+   */
+  def addingTuples(t1: List[(String, String, Int)], t2: List[(String, String, Int)]): List[(String, String, Int)] = {
+
+      t1 ::: t2
+  }
+
 }
 
+
+case class SfDataElement(uri: String, sf: String, offset: Int)
 

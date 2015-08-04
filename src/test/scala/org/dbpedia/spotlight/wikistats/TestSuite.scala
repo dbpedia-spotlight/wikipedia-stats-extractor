@@ -105,7 +105,7 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
     val computeStats = new ComputeStats(lang)
 
-    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    val sfDfs = computeStats.buildCounts(wikipediaParser)
 
     var annotatedCounts = 0l
     computeStats.computeTotalSfs(sfDfs._1,sfDfs._2)

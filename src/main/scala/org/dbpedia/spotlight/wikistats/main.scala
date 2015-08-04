@@ -37,9 +37,9 @@ object main {
     val stemmerString = args(4)
 
     val sparkConf = new SparkConf()
-                    //.setMaster("local[5]")
+                    .setMaster("local[5]")
                     .setAppName("WikiStats")
-                    //.set("spark.sql.shuffle.partitions","6")
+                    .set("spark.sql.shuffle.partitions","6")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -55,7 +55,7 @@ object main {
     val computeStats = new ComputeStats(lang)
 
     //Logic to build surface Form dataframes to be used for wiki stats counts
-    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    val sfDfs = computeStats.buildCounts(wikipediaParser)
 
     val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
 

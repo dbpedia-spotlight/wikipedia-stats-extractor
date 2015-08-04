@@ -34,7 +34,7 @@ trait WikiPediaParser {
   def getSfs() : RDD[String]
 
   //Method to build tokens from the list of Surface forms
-  def getTokensInSfs(): List[TokenType]
+  def getTokensInSfs(allSfs: List[String]): List[TokenType]
 
   //Method to get the wid and article text from dataframe
   def getArticleText(): RDD[(Long,String)]

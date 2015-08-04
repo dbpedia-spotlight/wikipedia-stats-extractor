@@ -32,11 +32,11 @@ object RawWikiMain {
     //Setting the input parameters
     val inputWikiDump = args(0)
     val lang = args(1)
-    val outputPath = args(2)
 
     val sparkConf = new SparkConf()
       .setMaster("local[5]")
       .setAppName("RawWikiText")
+      .set("spark.sql.shuffle.partitions","6")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -48,9 +48,10 @@ object RawWikiMain {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    /*
-    Write Logic - Incomplete
-     */
+    val rawWikiStats = new RawWikiStats(lang)
+
+    rawWikiStats.buildRawWiki(wikipediaParser)
+
     sc.stop()
   }
 

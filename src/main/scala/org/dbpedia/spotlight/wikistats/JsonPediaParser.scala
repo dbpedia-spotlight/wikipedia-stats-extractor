@@ -130,7 +130,6 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
       .flatMap(sf => sf)
   }
 
-
   /*
   Method to get the wid and article text from the wiki dump
     Input:  - None
@@ -139,6 +138,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
   def getArticleText(): RDD[(Long, String)] = {
 
     dfWikiRDD.select("wid","wikiText","type")
+      .distinct
       .rdd
       .filter(row => row.getString(2)== "ARTICLE")
       .map(artRow => {
@@ -182,51 +182,23 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   }
 
-
-/*
-  def getRawWikiText(): Unit ={
-
-    val language = lang
-    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"),new Column ("wid"),new Column("type"))
-    .select("type","wid","paraLink.links","paraLink.paraText")
-    .rdd
-    .filter(row => row.getString(0)== "ARTICLE")
-    .map(row => (row.getLong(1),row.getList[String](2),row.getString(3)))
-    .map(row => {
-
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      row._2.map(sf => {
-        val sfDet = sf.split(",")
-        //row._3.
-
-      })
-    })
-
-  }
-*/
-
   /*
    Logic to get the list of all the tokens in the Surface forms
     Input:  - None
     Output: - List of different token types
    */
 
-  def getTokensInSfs(): List[TokenType] ={
+  def getTokensInSfs(allSfs: List[String]): List[TokenType] ={
 
     val stemmer = new Stemmer()
     val locale = new Locale(lang)
     val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
     //Below Logic is for creating Token Store from the Surface forms
     //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
-    val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
+    val token = allSfs.flatMap( sf => lst.tokenizeUnstemmed(sf) )
 
 
     val tokenTypes=token.zip(Stream from 1).map{case (x,i) => new TokenType(i,x,0)}
-
-    //tokenTypes.foreach(x => println (x.toString()))
-    //tokenTypes.foreach(x => println (x.id,x.tokenType,x.count))
-    println("Printing Tokens")
-    println(tokenTypes.size)
 
     tokenTypes
   }
