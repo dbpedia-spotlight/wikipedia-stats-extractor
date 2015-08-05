@@ -20,11 +20,11 @@ Class to serialize the contents used for creating language tokenizer
 package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
-
-import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
+import java.io.File
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
-import scala.io.Source
+import collection.mutable
+import org.dbpedia.spotlight.model.TokenType
 
 
 object SpotlightUtils extends Serializable{
@@ -36,8 +36,7 @@ object SpotlightUtils extends Serializable{
 
     val locale = new Locale(lang)
 
-    val stopWords = createStopWordsSet(stopWordLoc)
-
+    val stopWords = Set.empty[String]
     new LanguageIndependentTokenizer(stopWords,
                                      stemmer,
                                      locale,
@@ -45,10 +44,80 @@ object SpotlightUtils extends Serializable{
   }
 
   def createStopWordsSet(stopWordLoc:String): Set[String] = {
+    scala.io.Source.fromFile(new File(stopWordLoc)).getLines().map(_.trim()).toSet
 
-    Source.fromFile(stopWordLoc).getLines().toSet
+  }
+
+  /*
+ Logic to create the Memory Token Store
+  Input:  - List of all Token types
+  Output: - Memory Store with the Token information
+ */
+  def createTokenTypeStore(tokenTypes: List[TokenType]): MemoryTokenTypeStore =  {
+
+    val tokenTypeStore = new MemoryTokenTypeStore()
+    val tokens = new Array[String](tokenTypes.size + 1)
+    val counts = new Array[Int](tokenTypes.size + 1)
+
+    tokenTypes.map(token => {
+      tokens(token.id) = token.tokenType
+      counts(token.id) = token.count
+
+    })
+
+    tokenTypeStore.tokenForId  = tokens.array
+    tokenTypeStore.counts = counts.array
+    tokenTypeStore.loaded()
+
+    tokenTypeStore
+  }
+
+  /*
+      Logic to concatnate two strings with the space. This function is used the reduceByKey operation
+      to contact two paragraphs.
+      Input:  - Two Strings to concatenate
+      Output: - Concatenated String with Space
+  */
+
+
+  def stringConcat (str1: String, str2: String): String = {
+
+    new mutable.StringBuilder(str1).append(" ").append(str2).toString()
+
+  }
+
+  /*
+    Logic to counts the Tokens in a List
+    to contact two paragraphs.
+    Input:  - List of tokens
+    Output: - List of tokens, count
+  */
+
+  def countTokens(tokens: List[String]): List[(String,Int)] = {
+
+    val tokenMap = new mutable.HashMap[String, Int]()
+    tokens.map( token => {
+      if (tokenMap.contains(token)) {
+         val value = tokenMap.getOrElse(token,0)
+         tokenMap.put(token, value + 1)
+      }
+      else
+         tokenMap.put(token,1)
+    })
+
+    tokenMap.toList
+  }
+
+  /*
+  Below logic is to merge two lists to be used by reduceByKey operation
+   */
+  def addingTuples(t1: List[(String, String, Int)], t2: List[(String, String, Int)]): List[(String, String, Int)] = {
+
+      t1 ::: t2
   }
 
 }
 
+
+case class SfDataElement(uri: String, sf: String, offset: Int)
 

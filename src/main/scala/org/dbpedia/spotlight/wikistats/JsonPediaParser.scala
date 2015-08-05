@@ -26,11 +26,10 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.storage.StorageLevel
-import org.dbpedia.spotlight.db.memory.MemoryTokenTypeStore
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
-import org.dbpedia.spotlight.wikistats.utils.RedirectUtil
+import org.dbpedia.spotlight.wikistats.utils.{SpotlightUtils, RedirectUtil}
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
 import scala.collection.mutable.HashMap
@@ -73,6 +72,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     conf.set(XmlInputFormat.START_TAG_KEY, "<page>")
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     conf.set(XmlInputFormat.LANG,lang)
+    conf.set("dfs.block.size","134217728")
 
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
       classOf[Text], conf)
@@ -130,7 +130,6 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
       .flatMap(sf => sf)
   }
 
-
   /*
   Method to get the wid and article text from the wiki dump
     Input:  - None
@@ -139,6 +138,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
   def getArticleText(): RDD[(Long, String)] = {
 
     dfWikiRDD.select("wid","wikiText","type")
+      .distinct
       .rdd
       .filter(row => row.getString(2)== "ARTICLE")
       .map(artRow => {
@@ -168,47 +168,18 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     Input:  - None
     Output: - RDD with the paragraph links and the text
    */
+
   def getUriParagraphs(): RDD[(String,String)] = {
 
     import org.apache.spark.sql.functions._
 
     dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"))
-      .select(explode(new Column("paraLink.links.id")).as("id"),new Column("paraLink.paraText"))
+      .select(explode(new Column("paraLink.links.id")).as("id"),new Column("paraLink.paraText").as("para"))
+      .distinct
+      .rdd
       .map(row => (row.getString(0),row.getString(1)))
+      .reduceByKey(SpotlightUtils.stringConcat)
 
-  }
-
-  def getRawWikiText(): Unit ={
-
-    dfWikiRDD.select(explode( new Column("paragraphsLink")).as("paraLink"))
-      .select(explode(new Column("paraLink.links")).as("link"),new Column("paraLink.paraText")).collect().foreach(println)
-      //.map(row => (row.getString(0),row.getString(1)))
-  }
-  /*
-   Logic to create the Memory Token Store
-    Input:  - List of all Token types
-    Output: - Memory Store with the Token information
-   */
-  def createTokenTypeStore(tokenTypes: List[TokenType]): MemoryTokenTypeStore =  {
-
-    val tokenTypeStore = new MemoryTokenTypeStore()
-    val tokens = new Array[String](tokenTypes.size + 1)
-    val counts = new Array[Int](tokenTypes.size + 1)
-
-    println ("Naveen in tokentypes:")
-
-    tokenTypes.map(token => {
-      println (token.id)
-      tokens(token.id) = token.tokenType
-      counts(token.id) = token.count
-
-    })
-
-    tokenTypeStore.tokenForId  = tokens.array
-    tokenTypeStore.counts = counts.array
-    tokenTypeStore.loaded()
-
-    tokenTypeStore
   }
 
   /*
@@ -217,19 +188,17 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     Output: - List of different token types
    */
 
-  def getTokensInSfs(): List[TokenType] ={
+  def getTokensInSfs(allSfs: List[String]): List[TokenType] ={
 
     val stemmer = new Stemmer()
     val locale = new Locale(lang)
     val lst = new LanguageIndependentStringTokenizer(locale, stemmer)
     //Below Logic is for creating Token Store from the Surface forms
     //TODO Getting Searlization error Hence Using Collect and ToList. May need to change in Future
-    val token = getSfs().collect().toList.flatMap( sf => lst.tokenizeUnstemmed(sf) )
+    val token = allSfs.flatMap( sf => lst.tokenizeUnstemmed(sf) )
 
 
     val tokenTypes=token.zip(Stream from 1).map{case (x,i) => new TokenType(i,x,0)}
-
-    //tokenTypes.foreach(x => println (x.toString()))
 
     tokenTypes
   }

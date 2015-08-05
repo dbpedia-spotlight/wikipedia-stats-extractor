@@ -29,7 +29,6 @@ import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
-import scala.collection.JavaConversions._
 import org.dbpedia.spotlight.db.stem.SnowballStemmer
 
 /*
@@ -43,16 +42,15 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
   Encapsulated Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
-  def buildCounts(wikipediaParser: JsonPediaParser,stopWordLoc: String): (DataFrame, DataFrame)={
-
+  def buildCounts(wikipediaParser: JsonPediaParser): (DataFrame, DataFrame)={
 
     val allSfs = wikipediaParser.getSfs().collect().toList
 
     //Below Logic is to get Tokens from the list of Surface forms
-    val tokens = wikipediaParser.getTokensInSfs()
+    val tokens = wikipediaParser.getTokensInSfs(allSfs)
 
     //Creating MemoryTokenTypeStore from the list of Tokens
-    val tokenTypeStore = wikipediaParser.createTokenTypeStore(tokens)
+    val tokenTypeStore = SpotlightUtils.createTokenTypeStore(tokens)
 
     //Broadcast TokenTypeStore for creating tokenizer inside MapPartitions
     val tokenTypeStoreBc = sc.broadcast(tokenTypeStore)
@@ -60,13 +58,12 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     val stemmer = new Stemmer()
     val lit = SpotlightUtils.createLanguageIndependentTokenzier(lang,
       tokenTypeStore,
-      stopWordLoc,
+      " ",
       stemmer)
 
     //Creating dictionary broadcast
     val fsaDict = FSASpotter.buildDictionaryFromIterable(allSfs,lit)
     val fsaDictBc = sc.broadcast(fsaDict)
-
 
     //Get wid and articleText for FSA spotter
     val textIdRDD = wikipediaParser.getArticleText()
@@ -77,17 +74,18 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     //Declaring value for avoiding the whole class to be serialized
     val language = lang
 
-    println ("Naveen before the FSA spotter logic")
     import sqlContext.implicits._
     //Logic to get the Surface Forms from FSA Spotter
     val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
+
+      val stemmer = new Stemmer()
+      val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
+        SpotlightUtils.createLanguageIndependentTokenzier(language,
+          tokenTypeStoreBc.value,
+          " ",
+          stemmer))
+
       textIds.map(textId => {
-        val stemmer = new Stemmer()
-        val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
-          SpotlightUtils.createLanguageIndependentTokenzier(language,
-            tokenTypeStoreBc.value,
-            stopWordLoc,
-            stemmer))
         allOccFSASpotter.extract(textId._2)
           .map(sfOffset => (textId._1,sfOffset._1))
 
@@ -95,7 +93,6 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
         .flatMap(idSf => idSf)
     })
 
-    println ("Naveen before returning the two dfs")
     /*
     Creating two surface form dataframes for computing various counts
      */
@@ -103,8 +100,9 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
-    (totalSfDf.persist(StorageLevel.MEMORY_ONLY_SER),uriSfDf.persist(StorageLevel.MEMORY_ONLY_SER))
+    (totalSfDf.persist(StorageLevel.MEMORY_AND_DISK),uriSfDf.persist(StorageLevel.MEMORY_AND_DISK))
   }
+
 
   /*
   Method to join the surface form dataframes for URI and Pari counts
@@ -218,13 +216,13 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute total Surface form Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the surface forms, annotated counts and total counts
+    Input:  - RDD with uri and the paragraphs where it is annotated
+    Output: - RDD with uri and Tokens
    */
 
   def computeTokenCounts(uriParaText: RDD[(String,String)],
                          stopWordLoc: String,
-                         stemmerString: String): RDD[(String, String)] = {
+                         stemmerString: String): RDD[(String,String)] = {
 
     import sqlContext.implicits._
 
@@ -234,22 +232,15 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
       val snowballStemmer = new SnowballStemmer(stemmerString)
       val locale = new Locale(language)
       val list = new LanguageIndependentStringTokenizer(locale,snowballStemmer)
-
+      val dbpediaEncode = new DBpediaUriEncode(language)
       val stemStopWords = collection.mutable.Set[String]()
       SpotlightUtils.createStopWordsSet(stopWordLoc).foreach(word =>
         list.tokenize(word).foreach(stemWord => stemStopWords += stemWord))
 
-      part.flatMap(row => list.tokenize(row._2).filter(!stemStopWords.contains(_)).toList.map(token => (row._1,token)))
-    }).toDF("uri","token")
-      .groupBy("uri","token")
-      .count
-      .rdd
-      .mapPartitions{rows =>
-    {
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      rows.map(row =>
-        (dbpediaEncode.wikiUriEncode(row.getString(0)),(row.getString(1),row.getLong(2)).toString()))}}
-      .reduceByKey(_ + _)
+      part.map(row => (dbpediaEncode.wikiUriEncode(row._1),SpotlightUtils.countTokens(list.tokenize(row._2).filter(!stemStopWords.contains(_)).toList).mkString(",")))
+
+    })
 
   }
+
 }

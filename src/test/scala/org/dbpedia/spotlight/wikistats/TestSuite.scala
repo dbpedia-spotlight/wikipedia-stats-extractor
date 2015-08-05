@@ -55,6 +55,15 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
   }
 
+  //Test case for verifying Redirects
+  test("Testing Redirects"){
+    implicit val sc = sc_implicit
+    implicit val sqlContext = new SQLContext(sc)
+
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+
+    assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==10)
+  }
 
   //Test case for verifying Redirects
   test("Counting Redirects"){
@@ -96,7 +105,7 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
     val computeStats = new ComputeStats(lang)
 
-    val sfDfs = computeStats.buildCounts(wikipediaParser,stopWordLoc)
+    val sfDfs = computeStats.buildCounts(wikipediaParser)
 
     var annotatedCounts = 0l
     computeStats.computeTotalSfs(sfDfs._1,sfDfs._2)
@@ -104,8 +113,8 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
       .collect()
       .toList
       .foreach(count => {
-           if (count == -1) annotatedCounts += 0
-           else annotatedCounts +=count
+      if (count == -1) annotatedCounts += 0
+      else annotatedCounts +=count
     })
 
     assert(totalLinks==annotatedCounts)
