@@ -37,17 +37,17 @@ trait WikiPediaParser {
   def getTokensInSfs(allSfs: List[String]): List[TokenType]
 
   //Method to get the wid and article text from dataframe
-  def getArticleText(): RDD[(Long,String,List[(String,Long)])]
+  def getArticleText(): RDD[(Long, String, List[(String,Long)])]
 
   //Method to parse XML to JSON and return a Dataframe
   def parseJSON(pageRDDs:RDD[String]): DataFrame
 
   //Method to compute redirects
-  def redirectsWikiArticles(): RDD[(String,String)]
+  def redirectsWikiArticles(): RDD[(String, String)]
 
   //Method to resolve redirects
-  def getResolveRedirects(): RDD[(String,String)]
+  def getResolveRedirects(): RDD[(String, String)]
 
   //Method to URI and paragraph text
-  def getUriParagraphs(): RDD[(String,String)]
+  def getUriParagraphs(): RDD[(String, String)]
 }

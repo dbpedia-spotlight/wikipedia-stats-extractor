@@ -18,7 +18,6 @@ package scala.org.dbpedia.spotlight.wikistats
 
 
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.wikistats.{ComputeStats, SharedSparkContext, JsonPediaParser}
 import org.scalatest.{BeforeAndAfter, FunSuite}
 
@@ -105,7 +104,8 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
     val computeStats = new ComputeStats(lang)
 
-    val sfDfs = computeStats.buildCounts(wikipediaParser)
+    val spotterSfsRDD = computeStats.spotSfsInWiki(wikipediaParser)
+    val sfDfs = computeStats.setupJoinDfs(wikipediaParser, spotterSfsRDD)
 
     var annotatedCounts = 0l
     computeStats.computeTotalSfs(sfDfs._1,sfDfs._2)
@@ -120,5 +120,24 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     assert(totalLinks==annotatedCounts)
   }
 
+
+  //Test case for verifying the spotter sfs
+  test("Spotter Sfs"){
+    implicit val sc = sc_implicit
+    implicit val sqlContext = new SQLContext(sc)
+
+    val wikipediaParser = new JsonPediaParser("src/test/resources/enwiki-pages-anarchism.xml",lang)
+
+
+    val wikiText = wikipediaParser.getArticleText().map(r => r._2).first().toString
+
+    val computeStats = new ComputeStats(lang)
+
+    val spotterSfsRDD = computeStats.spotSfsInWiki(wikipediaParser).collect()
+    spotterSfsRDD.foreach(sf => {
+      assert(wikiText.substring(sf._3,sf._3 + sf._2.length) == sf._2)
+    })
+
+  }
 
 }

@@ -99,7 +99,6 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
         allOccFSASpotter.extract(textId._2,spots.toList)
           .map(sfOffset => {
-          println(sfOffset)
           (textId._1,sfOffset._1,sfOffset._2)
         })
 
