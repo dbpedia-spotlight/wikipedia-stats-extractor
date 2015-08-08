@@ -119,5 +119,11 @@ object SpotlightUtils extends Serializable{
 }
 
 
-case class SfDataElement(uri: String, sf: String, offset: Int)
+/*
+Case classes for reading from the Dataframe Row
+ */
+case class span(desc : String, end: Long, id: String, start: Long)
+
+case class artRow(wid: Long, wikiText: String, artType: String, spans: Seq[span])
+
 

@@ -55,7 +55,9 @@ object main {
     val computeStats = new ComputeStats(lang)
 
     //Logic to build surface Form dataframes to be used for wiki stats counts
-    val sfDfs = computeStats.buildCounts(wikipediaParser)
+    val spotterSfsRDD = computeStats.spotSfsInWiki(wikipediaParser)
+
+    val sfDfs = computeStats.setupJoinDfs(wikipediaParser, spotterSfsRDD)
 
     val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
 
@@ -75,6 +77,8 @@ object main {
       .saveAsTextFile(outputPath + "TokenCounts")
 
     sc.stop()
+
+
   }
 
 

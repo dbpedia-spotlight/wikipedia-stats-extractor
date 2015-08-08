@@ -37,7 +37,7 @@ trait WikiPediaParser {
   def getTokensInSfs(allSfs: List[String]): List[TokenType]
 
   //Method to get the wid and article text from dataframe
-  def getArticleText(): RDD[(Long,String)]
+  def getArticleText(): RDD[(Long,String,List[(String,Long)])]
 
   //Method to parse XML to JSON and return a Dataframe
   def parseJSON(pageRDDs:RDD[String]): DataFrame

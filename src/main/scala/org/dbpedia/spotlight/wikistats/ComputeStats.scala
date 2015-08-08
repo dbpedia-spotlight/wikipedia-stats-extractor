@@ -26,10 +26,12 @@ import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
+import org.dbpedia.spotlight.model._
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.db.stem.SnowballStemmer
+import scala.collection.mutable.ListBuffer
 
 /*
 Class for computing various like uri, surface form and token Statistics on wikipedia dump
@@ -42,7 +44,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
   Encapsulated Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
-  def buildCounts(wikipediaParser: JsonPediaParser): (DataFrame, DataFrame)={
+  def spotSfsInWiki(wikipediaParser: JsonPediaParser): RDD[(Long, String, Int)] ={
 
     val allSfs = wikipediaParser.getSfs().collect().toList
 
@@ -68,15 +70,13 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     //Get wid and articleText for FSA spotter
     val textIdRDD = wikipediaParser.getArticleText()
 
-    //textIdRDD.foreach(println)
     //Implementing the FSA Spotter logic
 
     //Declaring value for avoiding the whole class to be serialized
     val language = lang
 
-    import sqlContext.implicits._
     //Logic to get the Surface Forms from FSA Spotter
-    val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
+    val spotterSfsRDD = textIdRDD.mapPartitions(textIds => {
 
       val stemmer = new Stemmer()
       val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
@@ -86,23 +86,45 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
           stemmer))
 
       textIds.map(textId => {
-        allOccFSASpotter.extract(textId._2)
-          .map(sfOffset => (textId._1,sfOffset._1))
+
+        var spots = ListBuffer[SurfaceFormOccurrence]()
+
+        textId._3.foreach(s => {
+
+          //Building the real Surface forms of the wiki article
+          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),new Text(textId._2),s._2.toInt,Provenance.Annotation, -1)
+          spotToAdd.setFeature(new Nominal("spot_type", "real"))
+          spots += spotToAdd
+        })
+
+        allOccFSASpotter.extract(textId._2,spots.toList)
+          .map(sfOffset => {
+          println(sfOffset)
+          (textId._1,sfOffset._1,sfOffset._2)
+        })
 
       })
         .flatMap(idSf => idSf)
     })
 
-    /*
-    Creating two surface form dataframes for computing various counts
-     */
+    spotterSfsRDD
+  }
 
-    val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
+  /*
+  Method to create two surface form Dfs to be used for the Wiki Counts
+  Input:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
+  Output: - Joined Dataframe
+ */
+
+  def setupJoinDfs(wikipediaParser: JsonPediaParser,
+          spotterSfsRDD: RDD[(Long, String, Int)]): (DataFrame, DataFrame) ={
+
+    import sqlContext.implicits._
+    val totalSfDf = spotterSfsRDD.toDF("wid", "sf2", "offset")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
     (totalSfDf.persist(StorageLevel.MEMORY_AND_DISK),uriSfDf.persist(StorageLevel.MEMORY_AND_DISK))
   }
-
 
   /*
   Method to join the surface form dataframes for URI and Pari counts
@@ -110,9 +132,9 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
   Output: - Joined Dataframe
  */
 
-  def joinSfDF(wikipediaParser:JsonPediaParser,
-               totalSfDf:DataFrame,
-               uriSfDf:DataFrame): DataFrame = {
+  def joinSfDF(wikipediaParser: JsonPediaParser,
+               totalSfDf: DataFrame,
+               uriSfDf: DataFrame): DataFrame = {
 
     import sqlContext.implicits._
 
@@ -180,7 +202,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     Output: - RDD with the surface forms, annotated counts and total counts
    */
 
-  def computeTotalSfs(totalSfDf: DataFrame, uriSfDf:DataFrame): RDD[(String,Long,Any)] = {
+  def computeTotalSfs(totalSfDf: DataFrame, uriSfDf: DataFrame): RDD[(String, Long, Any)] = {
 
     //Surface Form Counts Logic
     val sfAnnotatedCounts = uriSfDf
@@ -220,9 +242,9 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     Output: - RDD with uri and Tokens
    */
 
-  def computeTokenCounts(uriParaText: RDD[(String,String)],
+  def computeTokenCounts(uriParaText: RDD[(String, String)],
                          stopWordLoc: String,
-                         stemmerString: String): RDD[(String,String)] = {
+                         stemmerString: String): RDD[(String, String)] = {
 
     import sqlContext.implicits._
 

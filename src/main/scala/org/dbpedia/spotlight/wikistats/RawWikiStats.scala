@@ -22,8 +22,10 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.{AllOccurrencesFSASpotter, FSASpotter}
 import org.dbpedia.spotlight.db.model.Stemmer
-import org.dbpedia.spotlight.wikistats.utils.{SfDataElement, SpotlightUtils}
-
+import org.dbpedia.spotlight.model._
+import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
+import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
 
@@ -71,8 +73,17 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
           stemmer))
 
       textIds.map(textId => {
-        allOccFSASpotter.extract(textId._2)
-          .map(sfOffset => (textId._1,sfOffset._1,sfOffset._2))
+
+        var spots = ListBuffer[SurfaceFormOccurrence]()
+        textId._3.map(s => {
+          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),new Text(textId._2),s._2.toInt,Provenance.Annotation, -1)
+          spotToAdd.setFeature(new Nominal("spot_type", "real"))
+          spots += spotToAdd
+        })
+
+        spots.foreach(println)
+        allOccFSASpotter.extract(textId._2,spots.toList)
+          .map(sfOffset => (textId._1,sfOffset._1))
 
       })
         .flatMap(idSf => idSf)
@@ -105,7 +116,7 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
     joinedDf.join(wikiTextDf,(joinedDf("wid1") === wikiTextDf("wid")))
             .select("wikiText","Sfs")
             .rdd
-            //.map(row => (row.getString(0),row.getList[(String, String, Int)](1).toArray.sortBy()))
+            .map(row => (row.getString(0),row.getList[(String, String, Int)](1)))
             .collect().foreach(println)
 
 

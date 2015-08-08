@@ -29,7 +29,7 @@ import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.model.TokenType
-import org.dbpedia.spotlight.wikistats.utils.{SpotlightUtils, RedirectUtil}
+import org.dbpedia.spotlight.wikistats.utils._
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
 import scala.collection.mutable.HashMap
@@ -135,16 +135,21 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     Input:  - None
     Output: - RDD of all wikiId and the article text
    */
-  def getArticleText(): RDD[(Long, String)] = {
 
-    dfWikiRDD.select("wid","wikiText","type")
+  def getArticleText(): RDD[(Long, String, List[(String, Long)])] = {
+
+    dfWikiRDD.select("wid","wikiText","type","links")
       .distinct
-      .rdd
-      .filter(row => row.getString(2)== "ARTICLE")
-      .map(artRow => {
-      (artRow.getLong(0),artRow.getString(1))
-    })
-      .filter(artRow => artRow._2.length > 0)
+      .map{row => val wid = row.getLong(0)
+      val wikiText = row.getString(1)
+      val artType  = row.getString(2)
+      val spans = row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(1),r.getString(2),r.getLong(3)))
+      artRow(wid,wikiText,artType,spans)
+
+    }.filter(r => r.wikiText.length > 0 && r.artType == "ARTICLE")
+    .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start)).toList))
+
+
   }
 
   /*
@@ -169,7 +174,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     Output: - RDD with the paragraph links and the text
    */
 
-  def getUriParagraphs(): RDD[(String,String)] = {
+  def getUriParagraphs(): RDD[(String, String)] = {
 
     import org.apache.spark.sql.functions._
 
