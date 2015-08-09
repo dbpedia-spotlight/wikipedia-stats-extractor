@@ -37,9 +37,9 @@ object main {
     val stemmerString = args(4)
 
     val sparkConf = new SparkConf()
-                    .setMaster("local[5]")
+                    //.setMaster("local[5]")
                     .setAppName("WikiStats")
-                    .set("spark.sql.shuffle.partitions","6")
+                    //.set("spark.sql.shuffle.partitions","6")
 
     implicit val sc = new SparkContext(sparkConf)
 

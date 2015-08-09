@@ -136,7 +136,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     Output: - RDD of all wikiId and the article text
    */
 
-  def getArticleText(): RDD[(Long, String, List[(String, Long)])] = {
+  def getArticleText(): RDD[(Long, String, List[(String, Long, String)])] = {
 
     dfWikiRDD.select("wid","wikiText","type","links")
       .distinct
@@ -147,7 +147,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
       artRow(wid,wikiText,artType,spans)
 
     }.filter(r => r.wikiText.length > 0 && r.artType == "ARTICLE")
-    .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start)).toList))
+    .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start,s.id)).toList))
 
 
   }
