@@ -50,7 +50,7 @@ object RawWikiMain {
 
     val rawWikiStats = new RawWikiStats(lang)
 
-    rawWikiStats.buildRawWiki(wikipediaParser)
+    rawWikiStats.buildRawWiki(wikipediaParser).collect().foreach(println)
 
     sc.stop()
   }

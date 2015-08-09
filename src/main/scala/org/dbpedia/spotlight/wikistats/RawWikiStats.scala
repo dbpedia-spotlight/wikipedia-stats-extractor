@@ -89,10 +89,8 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
         })
 
         //Creating a list of sfs to be used for replacing the sf with the DBPedia entities
-        var spotterSfs = Seq[(String, Int, String)]()
-        allOccFSASpotter.extract(textId._2,spots.toList)
-          .foreach(sfOffset => {
-          spotterSfs = spotterSfs :+ (sfOffset._1,sfOffset._2,(if (sfMap.contains(sfOffset._1)) sfMap.get(sfOffset._1).get else sfOffset._1))
+        val spotterSfs = allOccFSASpotter.extract(textId._2,spots.toList)
+          .map(sf => {(sf._1,sf._2,(if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
         })
 
         //Storing the article text in a String Builder for replacing the sfs with dbpedia entities

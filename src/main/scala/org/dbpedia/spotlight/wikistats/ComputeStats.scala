@@ -99,8 +99,8 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
         //Calling the Spotter logic to extract the surface forms from the article text
         allOccFSASpotter.extract(textId._2,spots.toList)
-          .map(sfOffset => {
-          (textId._1,sfOffset._1,sfOffset._2)
+          .map(sf => {
+          (textId._1,sf._1,sf._2)
         })
 
       })
