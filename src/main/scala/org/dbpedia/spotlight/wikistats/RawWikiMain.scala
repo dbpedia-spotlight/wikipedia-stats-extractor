@@ -34,9 +34,9 @@ object RawWikiMain {
     val lang = args(1)
 
     val sparkConf = new SparkConf()
-      .setMaster("local[5]")
+      //.setMaster("local[5]")
       .setAppName("RawWikiText")
-      .set("spark.sql.shuffle.partitions","6")
+      //.set("spark.sql.shuffle.partitions","6")
 
     implicit val sc = new SparkContext(sparkConf)
 
