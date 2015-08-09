@@ -101,9 +101,9 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
 
         //Going through all the Sfs and replacing in the raw text
         spotterSfs.map(sf => {
-          val linktoReplace = dbpediaEncode.wikiUriEncode(sf._3)
-          artText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linktoReplace)
-          changeOffset += linktoReplace.length - sf._1.length
+          val linkToReplace = dbpediaEncode.wikiUriEncode(sf._3)
+          artText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linkToReplace)
+          changeOffset += linkToReplace.length - sf._1.length
         })
 
         artText.toString()

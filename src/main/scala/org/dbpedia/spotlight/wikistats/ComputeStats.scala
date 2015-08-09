@@ -89,16 +89,15 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
         var spots = ListBuffer[SurfaceFormOccurrence]()
 
-        var sfMap = Map.empty[String, String]
         textId._3.foreach(s => {
 
           //Building the real Surface forms of the wiki article
           val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),new Text(textId._2),s._2.toInt,Provenance.Annotation, -1)
           spotToAdd.setFeature(new Nominal("spot_type", "real"))
           spots += spotToAdd
-          sfMap += (s._1 -> s._3)
         })
 
+        //Calling the Spotter logic to extract the surface forms from the article text
         allOccFSASpotter.extract(textId._2,spots.toList)
           .map(sfOffset => {
           (textId._1,sfOffset._1,sfOffset._2)
@@ -118,7 +117,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
  */
 
   def setupJoinDfs(wikipediaParser: JsonPediaParser,
-          spotterSfsRDD: RDD[(Long, String, Int)]): (DataFrame, DataFrame) ={
+                   spotterSfsRDD: RDD[(Long, String, Int)]): (DataFrame, DataFrame) ={
 
     import sqlContext.implicits._
     val totalSfDf = spotterSfsRDD.toDF("wid", "sf2", "offset")
