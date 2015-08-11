@@ -17,7 +17,6 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
 
@@ -27,7 +26,7 @@ Entry point for Raw Wiki text
 
 object RawWikiMain {
 
-  def main(args: Array[String]): Unit ={
+  def main(args: Array[String]): Unit = {
 
     //Setting the input parameters
     val inputWikiDump = args(0)

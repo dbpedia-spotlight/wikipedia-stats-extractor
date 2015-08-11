@@ -139,15 +139,13 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
   def getArticleText(): RDD[(Long, String, List[(String, Long, String)])] = {
 
     dfWikiRDD.select("wid","wikiText","type","links")
-      .distinct
       .rdd
-      .filter(r => r.getString(1).length > 0 && r.getString(2) == "ARTICLE")
-      .map{row => val wid = row.getLong(0)
-      val wikiText = row.getString(1)
-      val articleType  = row.getString(2)
-      val spans = row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(1),r.getString(2),r.getLong(3)))
-      articleRow(wid,wikiText,articleType,spans)
-
+      .filter(row => row.getString(2) == "ARTICLE" )
+      .filter(row => row.getString(1).length > 0)
+      .map{row => articleRow(row.getLong(0),
+                             row.getString(1),
+                             row.getString(2),
+                             row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(3),r.getString(2),r.getLong(3))))
     }
     .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start,s.id)).toList))
 
