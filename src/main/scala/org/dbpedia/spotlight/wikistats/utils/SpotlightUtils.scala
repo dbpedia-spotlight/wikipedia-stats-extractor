@@ -124,6 +124,6 @@ Case classes for reading from the Dataframe Row
  */
 case class span(desc : String, end: Long, id: String, start: Long)
 
-case class articleRow(wid: Long, wikiText: String, artType: String, spans: Seq[span])
+case class articleRow(wid: Long, wikiText: String, articleType: String, spans: Seq[span])
 
 

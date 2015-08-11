@@ -62,16 +62,23 @@ object main {
     val joinedDfPersist = joinedDf.persist(StorageLevel.MEMORY_AND_DISK)
 
     //Uri Counts
-    computeStats.computeUriCounts(joinedDfPersist).saveAsTextFile(outputPath + "UriCounts")
+    computeStats.computeUriCounts(joinedDfPersist)
+                .map(line => line._1 + "\t" + line._2)
+                .saveAsTextFile(outputPath + "UriCounts")
 
     //Pair Counts
-    computeStats.computePairCounts(joinedDfPersist).saveAsTextFile(outputPath + "PairCounts")
+    computeStats.computePairCounts(joinedDfPersist)
+                .map(line => line._1 + "\t" + line._2 + "\t" + line._3)
+                .saveAsTextFile(outputPath + "PairCounts")
 
     //Total Surface Form counts
-    computeStats.computeTotalSfs(sfDfs._1, sfDfs._2).saveAsTextFile(outputPath + "TotalSfCounts")
+    computeStats.computeTotalSfs(sfDfs._1, sfDfs._2)
+                .map(line => line._1 + "\t" + line._2 + "\t" + line._3)
+                .saveAsTextFile(outputPath + "TotalSfCounts")
 
     //Token Counts
     computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)
+      .map(line => line._1 + "\t" + line._2)
       .saveAsTextFile(outputPath + "TokenCounts")
 
     sc.stop()

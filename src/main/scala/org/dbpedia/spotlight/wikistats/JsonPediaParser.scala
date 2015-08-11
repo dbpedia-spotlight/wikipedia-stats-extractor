@@ -141,13 +141,14 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     dfWikiRDD.select("wid","wikiText","type","links")
       .distinct
       .rdd
+      .filter(r => r.getString(1).length > 0 && r.getString(2) == "ARTICLE")
       .map{row => val wid = row.getLong(0)
       val wikiText = row.getString(1)
-      val artType  = row.getString(2)
+      val articleType  = row.getString(2)
       val spans = row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(1),r.getString(2),r.getLong(3)))
-      articleRow(wid,wikiText,artType,spans)
+      articleRow(wid,wikiText,articleType,spans)
 
-    }.filter(r => r.wikiText.length > 0 && r.artType == "ARTICLE")
+    }
     .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start,s.id)).toList))
 
 
