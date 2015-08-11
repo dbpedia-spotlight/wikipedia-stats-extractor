@@ -82,7 +82,11 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
         textId._3.foreach(s => {
 
           //Building the real Surface forms of the wiki article
-          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),new Text(textId._2),s._2.toInt,Provenance.Annotation, -1)
+          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),
+                                                    new Text(textId._2),
+                                                    s._2.toInt,
+                                                    Provenance.Annotation,
+                                                    -1)
           spotToAdd.setFeature(new Nominal("spot_type", "real"))
           spots += spotToAdd
           sfMap += (s._1 -> s._3)
@@ -90,7 +94,7 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
 
         //Creating a list of sfs to be used for replacing the sf with the DBPedia entities
         val spotterSfs = allOccFSASpotter.extract(textId._2,spots.toList)
-          .map(sf => {(sf._1,sf._2,(if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
+          .map(sf => {(sf._1, sf._2, (if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
         })
 
         //Storing the article text in a String Builder for replacing the sfs with dbpedia entities

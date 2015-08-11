@@ -92,7 +92,11 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
         textId._3.foreach(s => {
 
           //Building the real Surface forms of the wiki article
-          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),new Text(textId._2),s._2.toInt,Provenance.Annotation, -1)
+          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),
+                                                    new Text(textId._2),
+                                                    s._2.toInt,
+                                                    Provenance.Annotation,
+                                                    -1)
           spotToAdd.setFeature(new Nominal("spot_type", "real"))
           spots += spotToAdd
         })

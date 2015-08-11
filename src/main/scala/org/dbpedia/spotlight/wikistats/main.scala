@@ -37,9 +37,7 @@ object main {
     val stemmerString = args(4)
 
     val sparkConf = new SparkConf()
-      //.setMaster("local[5]")
       .setAppName("WikiStats")
-    //.set("spark.sql.shuffle.partitions","6")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -59,7 +57,7 @@ object main {
 
     val sfDfs = computeStats.setupJoinDfs(wikipediaParser, spotterSfsRDD)
 
-    val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)//.repartition(6)
+    val joinedDf = computeStats.joinSfDF(wikipediaParser,sfDfs._1,sfDfs._2)
 
     val joinedDfPersist = joinedDf.persist(StorageLevel.MEMORY_AND_DISK)
 
