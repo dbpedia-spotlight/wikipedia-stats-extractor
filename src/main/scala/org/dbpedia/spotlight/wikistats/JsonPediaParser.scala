@@ -28,7 +28,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
-import org.dbpedia.spotlight.model.TokenType
+import org.dbpedia.spotlight.model._
 import org.dbpedia.spotlight.wikistats.utils._
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
@@ -143,15 +143,39 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
       .filter(row => row.getString(2) == "ARTICLE" )
       .filter(row => row.getString(1).length > 0)
       .map{row => articleRow(row.getLong(0),
-                             row.getString(1),
-                             row.getString(2),
-                             row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(3),r.getString(2),r.getLong(3))))
+      row.getString(1),
+      row.getString(2),
+      row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(3),r.getString(2),r.getLong(3))))
     }
-    .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start,s.id)).toList))
+      .map(r => (r.wid,r.wikiText,r.spans.map(s => (s.desc,s.start,s.id)).toList))
 
 
   }
 
+  def getArticleText1(): RDD[(Long, String, List[(SurfaceFormOccurrence, String, String)])] = {
+
+
+    dfWikiRDD.select("wid","wikiText","type","links")
+      .rdd
+      .filter(row => row.getString(2) == "ARTICLE" )
+      .filter(row => row.getString(1).length > 0)
+      .map{row => articleRow(row.getLong(0),
+      row.getString(1),
+      row.getString(2),
+      row.getAs[Seq[Row]](3).map(r => span(r.getString(0),r.getLong(3),r.getString(2),r.getLong(3))))
+    }
+      .map(r => {val articleText = new org.dbpedia.spotlight.model.Text(r.wikiText)
+
+      (r.wid,r.wikiText,r.spans.map{s =>
+        val spot = new SurfaceFormOccurrence(new SurfaceForm(s.desc),
+          articleText,
+          s.start.toInt,
+          Provenance.Annotation,
+          -1)
+        (spot, s.desc, s.id)}.toList)})
+
+
+  }
   /*
    Logic to Get Surface Forms and URIs from the wikiDump
     Input:  - None

@@ -17,6 +17,8 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import java.util.Calendar
+
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
@@ -55,7 +57,8 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
     val fsaDictBc = sc.broadcast(fsaDict)
 
     //Get wid and articleText for FSA spotter
-    val textIdRDD = wikipediaParser.getArticleText()
+
+    val textIdRDD = wikipediaParser.getArticleText1().persist(StorageLevel.MEMORY_AND_DISK)
 
     //Implementing the FSA Spotter logic
 
@@ -75,21 +78,26 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
       val dbpediaEncode = new DBpediaUriEncode(language)
 
       textIds.map(textId => {
-
+        System.err.println("Process Start" + Calendar.getInstance().getTime())
         var spots = ListBuffer[SurfaceFormOccurrence]()
 
         var sfMap = Map.empty[String, String]
         textId._3.foreach(s => {
 
+          //println("nav")
           //Building the real Surface forms of the wiki article
+
+          /*
+          val articleText = new Text(textId._2)
           val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),
-                                                    new Text(textId._2),
+                                                    articleText,
                                                     s._2.toInt,
                                                     Provenance.Annotation,
                                                     -1)
-          spotToAdd.setFeature(new Nominal("spot_type", "real"))
-          spots += spotToAdd
-          sfMap += (s._1 -> s._3)
+          spotToAdd.setFeature(new Nominal("spot_type", "real")) */
+          s._1.setFeature(new Nominal("spot_type", "real"))
+          spots += s._1
+          sfMap += (s._2 -> s._3)
         })
 
         //Creating a list of sfs to be used for replacing the sf with the DBPedia entities
@@ -98,17 +106,17 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
         })
 
         //Storing the article text in a String Builder for replacing the sfs with dbpedia entities
-        val artText = new StringBuilder(textId._2)
+        val changedArticleText = new StringBuilder(textId._2)
         var changeOffset = 0
 
         //Going through all the Sfs and replacing in the raw text
         spotterSfs.map(sf => {
           val linkToReplace = dbpediaEncode.wikiUriEncode(sf._3)
-          artText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linkToReplace)
+          changedArticleText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linkToReplace)
           changeOffset += linkToReplace.length - sf._1.length
         })
-
-        artText.toString()
+        System.err.println("Process end" + Calendar.getInstance().getTime())
+        changedArticleText.toString()
       })
     })
 

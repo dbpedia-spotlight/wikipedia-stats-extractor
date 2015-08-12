@@ -34,7 +34,9 @@ object RawWikiMain {
     val outputPath = args(2)
 
     val sparkConf = new SparkConf()
+      //.setMaster("local[5]")
       .setAppName("RawWikiText")
+      //.set("spark.sql.shuffle.partitions","6")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -47,8 +49,12 @@ object RawWikiMain {
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
     val rawWikiStats = new RawWikiStats(lang)
+    //wikipediaParser.getArticleText1().saveAsTextFile(outputPath + "RawWiki")
+
 
     rawWikiStats.buildRawWiki(wikipediaParser).saveAsTextFile(outputPath + "RawWiki")
+    //wikipediaParser.getArticleText().saveAsTextFile(outputPath + "RawWiki")
+    //wikipediaParser.getArticleText1().collect().foreach(println)
 
     sc.stop()
   }
