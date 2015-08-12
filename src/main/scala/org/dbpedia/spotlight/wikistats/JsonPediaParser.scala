@@ -72,7 +72,9 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     conf.set(XmlInputFormat.START_TAG_KEY, "<page>")
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     conf.set(XmlInputFormat.LANG,lang)
-    conf.set("dfs.block.size","134217728")
+    //conf.set("dfs.block.size","134217728")
+    conf.set("mapreduce.input.fileinputformat.split.maxsize", "100000000")
+    conf.set("mapreduce.input.fileinputformat.split.minsize", "50000000")
 
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
       classOf[Text], conf)

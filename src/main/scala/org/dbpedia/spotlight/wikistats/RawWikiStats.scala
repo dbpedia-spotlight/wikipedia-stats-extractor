@@ -81,8 +81,8 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
         System.err.println("Process Start" + Calendar.getInstance().getTime())
         var spots = ListBuffer[SurfaceFormOccurrence]()
 
-        var sfMap = Map.empty[String, String]
-        textId._3.foreach(s => {
+        //var sfMap = Map.empty[String, String]
+        val sfMap = textId._3.map(s => {
 
           //println("nav")
           //Building the real Surface forms of the wiki article
@@ -97,13 +97,18 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
           spotToAdd.setFeature(new Nominal("spot_type", "real")) */
           s._1.setFeature(new Nominal("spot_type", "real"))
           spots += s._1
-          sfMap += (s._2 -> s._3)
-        })
+          (s._2 -> s._3)
+        }).toMap
 
         //Creating a list of sfs to be used for replacing the sf with the DBPedia entities
-        val spotterSfs = allOccFSASpotter.extract(textId._2,spots.toList)
-          .map(sf => {(sf._1, sf._2, (if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
-        })
+        //val spotterSfs = allOccFSASpotter.extract(textId._2,spots.toList)
+          //.map(sf => {(sf._1, sf._2, (if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
+        //})
+
+
+        val spotterSfs = allOccFSASpotter.extract(textId._2, spots.toList)
+                                         .filter(sf => sfMap.contains(sf._1))
+                                         .map(sf => (sf._1, sf._2, sfMap(sf._1)))
 
         //Storing the article text in a String Builder for replacing the sfs with dbpedia entities
         val changedArticleText = new StringBuilder(textId._2)
