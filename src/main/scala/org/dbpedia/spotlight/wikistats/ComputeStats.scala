@@ -68,7 +68,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     val fsaDictBc = sc.broadcast(fsaDict)
 
     //Get wid and articleText for FSA spotter
-    val textIdRDD = wikipediaParser.getArticleText()
+    val textIdRDD = wikipediaParser.getArticleText1()
 
     //Implementing the FSA Spotter logic
 
@@ -87,11 +87,12 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
       textIds.map(textId => {
 
-        var spots = ListBuffer[SurfaceFormOccurrence]()
-
+        //var spots = ListBuffer[SurfaceFormOccurrence]()
+        /*
         textId._3.foreach(s => {
 
           //Building the real Surface forms of the wiki article
+
           val articleText = new Text(textId._2)
           val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),
                                                     articleText,
@@ -100,11 +101,14 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
                                                     -1)
 
           spotToAdd.setFeature(new Nominal("spot_type", "real"))
+
           spots += spotToAdd
-        })
+        }) */
+
+        val spots = textId._3.map(sfOcc => sfOcc._1).toList
 
         //Calling the Spotter logic to extract the surface forms from the article text
-        allOccFSASpotter.extract(textId._2,spots.toList)
+        allOccFSASpotter.extract(textId._2,spots)
           .map(sf => {
           (textId._1,sf._1,sf._2)
         })
@@ -170,6 +174,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
       .map(row => {
       (row.getString(0),row.getLong(1))
     })
+      .filter(row => row._1.length > 0)
       .mapPartitions(uris => {
       val dbpediaEncode = new DBpediaUriEncode(language)
       uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
@@ -195,6 +200,7 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
       .map(row => {
       (row.getString(0),row.getString(1),row.getLong(2))
     })
+      .filter(row => row._2.length > 0)
       .mapPartitions(urisfs => {
       val dbpediaEncode = new DBpediaUriEncode(language)
       urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))

@@ -30,6 +30,8 @@ import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.HashMap
+
 
 class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
 
@@ -56,9 +58,19 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
     val fsaDict = FSASpotter.buildDictionaryFromIterable(allSfs,lit)
     val fsaDictBc = sc.broadcast(fsaDict)
 
+    //Constructing Redirects Broadcast HashMap
+    val redirectsRdd = wikipediaParser.constructResolvedRedirects()
+
+    var redirectsMap = sc.accumulableCollection(HashMap[String, String]())
+    redirectsRdd.foreach(row => {redirectsMap += row._1.toLowerCase -> row._2})
+
+    val redirectsMapBc = sc.broadcast(redirectsMap.value)
+
+    println("Naveen printing redirects bc")
+    println (redirectsMapBc.value)
     //Get wid and articleText for FSA spotter
 
-    val textIdRDD = wikipediaParser.getArticleText1().persist(StorageLevel.MEMORY_AND_DISK)
+    val textIdRDD = wikipediaParser.getArticleText1()
 
     //Implementing the FSA Spotter logic
 
@@ -79,7 +91,7 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
 
       textIds.map(textId => {
         System.err.println("Process Start" + Calendar.getInstance().getTime())
-        var spots = ListBuffer[SurfaceFormOccurrence]()
+        //var spots = ListBuffer[SurfaceFormOccurrence]()
 
         //var sfMap = Map.empty[String, String]
         val sfMap = textId._3.map(s => {
@@ -95,18 +107,19 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
                                                     Provenance.Annotation,
                                                     -1)
           spotToAdd.setFeature(new Nominal("spot_type", "real")) */
-          s._1.setFeature(new Nominal("spot_type", "real"))
-          spots += s._1
+          //s._1.setFeature(new Nominal("spot_type", "real"))
+          //spots += s._1
           (s._2 -> s._3)
         }).toMap
 
+        val spots = textId._3.map(s => s._1).toList
         //Creating a list of sfs to be used for replacing the sf with the DBPedia entities
         //val spotterSfs = allOccFSASpotter.extract(textId._2,spots.toList)
           //.map(sf => {(sf._1, sf._2, (if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
         //})
 
 
-        val spotterSfs = allOccFSASpotter.extract(textId._2, spots.toList)
+        val spotterSfs = allOccFSASpotter.extract(textId._2, spots)
                                          .filter(sf => sfMap.contains(sf._1))
                                          .map(sf => (sf._1, sf._2, sfMap(sf._1)))
 
@@ -115,8 +128,13 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
         var changeOffset = 0
 
         //Going through all the Sfs and replacing in the raw text
-        spotterSfs.map(sf => {
-          val linkToReplace = dbpediaEncode.wikiUriEncode(sf._3)
+
+        spotterSfs.foreach(sf => {
+          val redirectLink = if (redirectsMapBc.value.contains(sf._3.toLowerCase))
+                                 redirectsMapBc.value(sf._3.toLowerCase).toString
+                             else sf._3.toString
+
+          val linkToReplace = " " + dbpediaEncode.uriEncode(redirectLink) + " "
           changedArticleText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linkToReplace)
           changeOffset += linkToReplace.length - sf._1.length
         })

@@ -73,8 +73,8 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     conf.set(XmlInputFormat.LANG,lang)
     //conf.set("dfs.block.size","134217728")
-    conf.set("mapreduce.input.fileinputformat.split.maxsize", "100000000")
-    conf.set("mapreduce.input.fileinputformat.split.minsize", "50000000")
+    conf.set("mapreduce.input.fileinputformat.split.maxsize", "140000000")
+    conf.set("mapreduce.input.fileinputformat.split.minsize", "120000000")
 
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
       classOf[Text], conf)
@@ -104,7 +104,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
   def getResolveRedirects(): RDD[(String, String)] = {
 
     val rddRedirects = redirectsWikiArticles()
-    var linkMap = sc.accumulableCollection(HashMap[String,String]())
+    var linkMap = sc.accumulableCollection(HashMap[String, String]())
 
     rddRedirects.foreach(row => {linkMap += (row._1 -> row._2)})
 
@@ -113,11 +113,29 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
     rddRedirects.mapPartitions(rows => {
       val redirectUtil = new RedirectUtil(mapBc.value)
-      rows.map { row => (redirectUtil.getEndOfChainURI(row._1),row._1)
+      rows.map { row => (redirectUtil.getEndOfChainURI(row._1), row._1)
       }})
 
   }
 
+  def constructResolvedRedirects(): RDD[(String, String)] = {
+
+    val rddRedirects = redirectsWikiArticles()
+    var linkMap = sc.accumulableCollection(HashMap[String, String]())
+
+    rddRedirects.foreach(row => {linkMap += (row._1 -> row._2)})
+
+    val mapBc = sc.broadcast(linkMap.value)
+
+    println("Naveen in construct rdirects")
+    println (mapBc.value)
+
+    rddRedirects.mapPartitions(rows => {
+      val redirectUtil = new RedirectUtil(mapBc.value)
+      rows.map { row => (row._1 , redirectUtil.getEndOfChainURI(row._1))
+      }})
+
+  }
   /*
      Method to Get the list of Surface forms from the wiki
     Input:  - None
@@ -125,11 +143,17 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
    */
   def getSfs() : RDD[String] = {
 
+    import sqlContext.implicits._
     dfWikiRDD.select("wid","links.description","type")
       .rdd
       .filter(row => row.getString(2)== "ARTICLE")
       .map(artRow => artRow.getList[String](1))
       .flatMap(sf => sf)
+      .toDF("sf")
+      .select("sf")
+      .distinct
+      .rdd
+      .map(row => row.getString(0))
   }
 
   /*
@@ -174,6 +198,7 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
           s.start.toInt,
           Provenance.Annotation,
           -1)
+        spot.setFeature(new Nominal("spot_type", "real"))
         (spot, s.desc, s.id)}.toList)})
 
 

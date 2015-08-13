@@ -17,14 +17,14 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
+import org.apache.spark.{SparkConf, SparkContext}
 
 /*
-Entry point for Raw Wiki text
+Entry point to generate JSON formated wikipedia dump
  */
 
-object RawWikiMain {
+object JsonWikipediaMain {
 
   def main(args: Array[String]): Unit = {
 
@@ -36,7 +36,9 @@ object RawWikiMain {
     val sparkConf = new SparkConf()
       //.setMaster("local[5]")
       .setAppName("RawWikiText")
-      //.set("spark.sql.shuffle.partitions","6")
+    //.set("spark.sql.shuffle.partitions","6")
+      .set("mapreduce.input.fileinputformat.split.maxsize", "140000000")
+      .set("mapreduce.input.fileinputformat.split.minsize", "120000000")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -48,12 +50,10 @@ object RawWikiMain {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
 
-    //wikipediaParser.pageRDDs = sc.textFile(inputWikiDump, 5)
-    val rawWikiStats = new RawWikiStats(lang)
-    //wikipediaParser.getArticleText1().saveAsTextFile(outputPath + "RawWiki")
+    wikipediaParser.parse(inputWikiDump).saveAsTextFile(outputPath + "Jsonpedia")
 
 
-    rawWikiStats.buildRawWiki(wikipediaParser).saveAsTextFile(outputPath + "RawWiki")
+    //  rawWikiStats.buildRawWiki(wikipediaParser).saveAsTextFile(outputPath + "RawWiki")
     //wikipediaParser.getArticleText().saveAsTextFile(outputPath + "RawWiki")
     //wikipediaParser.getArticleText1().collect().foreach(println)
 
