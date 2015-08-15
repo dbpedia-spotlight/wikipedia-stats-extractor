@@ -26,18 +26,18 @@ import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.{FSASpotter, AllOccurrencesFSASpotter}
-import org.dbpedia.spotlight.model._
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
 import org.dbpedia.spotlight.db.stem.SnowballStemmer
-import scala.collection.mutable.ListBuffer
 
 /*
 Class for computing various like uri, surface form and token Statistics on wikipedia dump
+@params - Wikipedia language, Spark and SQL Context for executing Spark code
  */
 
-class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
+class ComputeStats(lang: String) (implicit val sc: SparkContext,
+                                  implicit val sqlContext: SQLContext){
 
 
   /*
@@ -68,11 +68,9 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     val fsaDictBc = sc.broadcast(fsaDict)
 
     //Get wid and articleText for FSA spotter
-    val textIdRDD = wikipediaParser.getArticleText1()
+    val textIdRDD = wikipediaParser.getArticleText()
 
-    //Implementing the FSA Spotter logic
-
-    //Declaring value for avoiding the whole class to be serialized
+    //Declaring language value for avoiding the whole class to be serialized
     val language = lang
 
     //Logic to get the Surface Forms from FSA Spotter
@@ -86,25 +84,6 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
           stemmer))
 
       textIds.map(textId => {
-
-        //var spots = ListBuffer[SurfaceFormOccurrence]()
-        /*
-        textId._3.foreach(s => {
-
-          //Building the real Surface forms of the wiki article
-
-          val articleText = new Text(textId._2)
-          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),
-                                                    articleText,
-                                                    s._2.toInt,
-                                                    Provenance.Annotation,
-                                                    -1)
-
-          spotToAdd.setFeature(new Nominal("spot_type", "real"))
-
-          spots += spotToAdd
-        }) */
-
         val spots = textId._3.map(sfOcc => sfOcc._1).toList
 
         //Calling the Spotter logic to extract the surface forms from the article text
@@ -122,8 +101,8 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
   Method to create two surface form Dfs to be used for the Wiki Counts
-  Input:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
-  Output: - Joined Dataframe
+  @param:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
+  @return: - Joined Dataframe
  */
 
   def setupJoinDfs(wikipediaParser: JsonPediaParser,
@@ -138,8 +117,8 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
   Method to join the surface form dataframes for URI and Pari counts
-  Input:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
-  Output: - Joined Dataframe
+  @param:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
+  @return: - Joined Dataframe
  */
 
   def joinSfDF(wikipediaParser: JsonPediaParser,
@@ -158,8 +137,17 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute URI Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the Uris and count
+    @param:  - Dataframe with the Uri and Surface form information
+    @return: - RDD of    URI  and its Counts in the whole wiki
+
+
+    Example
+
+    DBpedia URI                             Count
+    --------------------------------------------------------------
+    http://en.dbpedia.org/resource/1        21
+    http://en.dbpedia.org/resource/7        7
+    http://en.dbpedia.org/resource/C        20
    */
 
   def computeUriCounts(joinedDf: DataFrame): RDD[(String, Long)] = {
@@ -184,8 +172,16 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute Pair Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the Uris and Surface form counts
+    @param:  - Dataframe with the Uri and Surface form information
+    @return: - RDD of   (Surface Form, Uri, Count of Surface Form and Uri Combination)
+
+    Example
+
+    Surface form     DBpedia URI                                         Count
+    ----------------------------------------------------------------------------
+    Berlin           http://en.dbpedia.org/resource/Brent_Berlin         2
+    Berlin           http://en.dbpedia.org/resource/Trams_in_Berlin      9
+    Berlin           http://en.dbpedia.org/resource/Berlin_(Seedorf)     1
    */
 
   def computePairCounts(joinedDf: DataFrame): RDD[(String, String, Long)] =  {
@@ -210,8 +206,17 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute total Surface form Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the surface forms, annotated counts and total counts
+    @param:  - Dataframe with the Uri and Surface form information
+    @return: - RDD of (Surface form, nbr of times the surface form annotated
+                                   ,total nbr of times Surface form in the whole corpus)
+
+    Example
+
+    Surface form         Count annotated    Count total
+    --------------------------------------------------------------
+    Berlin               49068              105915
+    Berloz               2                  6
+    9z                   -1                 1
    */
 
   def computeTotalSfs(totalSfDf: DataFrame, uriSfDf: DataFrame): RDD[(String, Long, Any)] = {
@@ -250,8 +255,15 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute total Surface form Counts on the WikiDump
-    Input:  - RDD with uri and the paragraphs where it is annotated
-    Output: - RDD with uri and Tokens
+    @param:  - RDD with URI and the paragraphs where it is annotated
+    @return: - RDD with URI and Tokens associated
+
+    Example
+
+    Wikipedia URI                   Stemmed token counts
+    ----------------------------------------------------------------------------
+    http://en.wikipedia.org/wiki/!  {(renam,76),(intel,14),...,(plai,2),(auf,2)}
+
    */
 
   def computeTokenCounts(uriParaText: RDD[(String, String)],

@@ -16,8 +16,11 @@
 
 package org.dbpedia.spotlight.wikistats.utils
 
+/*
+Utility Class for resolving redirects
+ */
 
-class RedirectUtil(map:collection.mutable.Map[String,String]) extends Serializable{
+class RedirectUtil(map:collection.mutable.Map[String, String]) extends Serializable{
 
   //Get the resolved Redirect
   def getEndOfChainURI(uri: String): String = getEndOfChainURI(uri, Set())

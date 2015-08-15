@@ -26,7 +26,7 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 Test Suite for testing the Spark Application funtionality
  */
 
-class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
+class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
   /*
   Declaring common variables used across all the test cases

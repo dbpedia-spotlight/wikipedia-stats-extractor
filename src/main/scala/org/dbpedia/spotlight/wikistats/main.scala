@@ -22,7 +22,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
 
 /*
-Entry point for Code Execution
+Entry point for WikiStats Code Execution
  */
 
 object main {
@@ -36,8 +36,7 @@ object main {
     val outputPath = args(3)
     val stemmerString = args(4)
 
-    val sparkConf = new SparkConf()
-      .setAppName("WikiStats")
+    val sparkConf = new SparkConf().setAppName("WikiStats")
 
     implicit val sc = new SparkContext(sparkConf)
 

@@ -22,16 +22,17 @@ import java.util.Calendar
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.{AllOccurrencesFSASpotter, FSASpotter}
 import org.dbpedia.spotlight.db.model.Stemmer
-import org.dbpedia.spotlight.model._
 import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
 import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
 import scala.collection.JavaConversions._
-import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
 
+/*
+Class to replace the Surface forms with the dbpedia Uri in the article text
+
+ */
 
 class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
 
@@ -65,12 +66,9 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
     redirectsRdd.foreach(row => {redirectsMap += row._1.toLowerCase -> row._2})
 
     val redirectsMapBc = sc.broadcast(redirectsMap.value)
-
-    println("Naveen printing redirects bc")
-    println (redirectsMapBc.value)
     //Get wid and articleText for FSA spotter
 
-    val textIdRDD = wikipediaParser.getArticleText1()
+    val textIdRDD = wikipediaParser.getArticleText()
 
     //Implementing the FSA Spotter logic
 
@@ -90,34 +88,12 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
       val dbpediaEncode = new DBpediaUriEncode(language)
 
       textIds.map(textId => {
-        System.err.println("Process Start" + Calendar.getInstance().getTime())
-        //var spots = ListBuffer[SurfaceFormOccurrence]()
 
-        //var sfMap = Map.empty[String, String]
         val sfMap = textId._3.map(s => {
-
-          //println("nav")
-          //Building the real Surface forms of the wiki article
-
-          /*
-          val articleText = new Text(textId._2)
-          val spotToAdd = new SurfaceFormOccurrence(new SurfaceForm(s._1),
-                                                    articleText,
-                                                    s._2.toInt,
-                                                    Provenance.Annotation,
-                                                    -1)
-          spotToAdd.setFeature(new Nominal("spot_type", "real")) */
-          //s._1.setFeature(new Nominal("spot_type", "real"))
-          //spots += s._1
           (s._2 -> s._3)
         }).toMap
 
         val spots = textId._3.map(s => s._1).toList
-        //Creating a list of sfs to be used for replacing the sf with the DBPedia entities
-        //val spotterSfs = allOccFSASpotter.extract(textId._2,spots.toList)
-          //.map(sf => {(sf._1, sf._2, (if (sfMap.contains(sf._1)) sfMap.get(sf._1).get else sf._1))
-        //})
-
 
         val spotterSfs = allOccFSASpotter.extract(textId._2, spots)
                                          .filter(sf => sfMap.contains(sf._1))
@@ -138,7 +114,6 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
           changedArticleText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linkToReplace)
           changeOffset += linkToReplace.length - sf._1.length
         })
-        System.err.println("Process end" + Calendar.getInstance().getTime())
         changedArticleText.toString()
       })
     })
