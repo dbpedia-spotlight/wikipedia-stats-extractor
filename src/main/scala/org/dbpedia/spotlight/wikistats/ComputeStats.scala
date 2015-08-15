@@ -164,8 +164,9 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,
     })
       .filter(row => row._1.length > 0)
       .mapPartitions(uris => {
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
+      //val dbpediaEncode = new DBpediaUriEncode(language)
+      //uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
+      uris.map(uri => (uri._1,uri._2))
 
     })
   }
@@ -198,9 +199,9 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,
     })
       .filter(row => row._2.length > 0)
       .mapPartitions(urisfs => {
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
-
+      //val dbpediaEncode = new DBpediaUriEncode(language)
+      //urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
+      urisfs.map(urisf => (urisf._1,urisf._2,urisf._3))
     })
   }
 
