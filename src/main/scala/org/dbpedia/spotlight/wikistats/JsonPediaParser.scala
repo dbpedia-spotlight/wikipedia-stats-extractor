@@ -41,12 +41,15 @@ Member variables -  1. Input Wikipedia Dump Path
  */
 
 
-class JsonPediaParser(inputWikiDump: String, lang: String)
+class JsonPediaParser(inputWikiDump: String,
+                      lang: String,
+                      jsonParsing: Boolean)
                      (implicit val sc: SparkContext, implicit val sqlContext: SQLContext)
   extends WikiPediaParser{
 
 
-  val pageRDDs = parse(inputWikiDump).persist(StorageLevel.MEMORY_AND_DISK)
+  val pageRDDs = if (jsonParsing) parse(inputWikiDump).persist(StorageLevel.DISK_ONLY)
+                 else sc.textFile(inputWikiDump)
   val dfWikiRDD = parseJSON(pageRDDs)
 
   /*
@@ -76,8 +79,8 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     conf.set(XmlInputFormat.START_TAG_KEY, "<page>")
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     conf.set(XmlInputFormat.LANG,lang)
-    conf.set("mapreduce.input.fileinputformat.split.maxsize", "140000000")
-    conf.set("mapreduce.input.fileinputformat.split.minsize", "120000000")
+    conf.set("mapreduce.input.fileinputformat.split.maxsize", "200000000")
+    conf.set("mapreduce.input.fileinputformat.split.minsize", "199999999")
 
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
       classOf[Text], conf)

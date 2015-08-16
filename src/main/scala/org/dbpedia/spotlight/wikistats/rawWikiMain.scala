@@ -43,7 +43,9 @@ object rawWikiMain {
     /*
     Parsing and Processing Starts from here
      */
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,
+                                              lang,
+                                              true)
 
     val rawWikiStats = new RawWikiStats(lang)
 

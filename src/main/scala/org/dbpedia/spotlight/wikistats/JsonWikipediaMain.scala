@@ -34,7 +34,7 @@ object jsonWikipediaMain {
     val outputPath = args(2)
 
     val sparkConf = new SparkConf()
-      .setAppName("RawWikiText")
+      .setAppName("JsonWikiPedia")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -44,9 +44,11 @@ object jsonWikipediaMain {
     /*
     Parsing Starts from here
      */
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump,
+                                              lang,
+                                              true)
 
-    wikipediaParser.parse(inputWikiDump).saveAsTextFile(outputPath + "Jsonpedia")
+    wikipediaParser.pageRDDs.saveAsTextFile(outputPath + "Jsonpedia")
     sc.stop()
   }
 

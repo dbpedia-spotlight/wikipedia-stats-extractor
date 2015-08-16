@@ -48,7 +48,7 @@ class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAf
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     wikipediaParser.getSfs().collect().toList.foreach(sf => assert(!sf.isEmpty))
 
@@ -59,7 +59,7 @@ class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAf
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==10)
   }
@@ -69,7 +69,7 @@ class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAf
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==10)
   }
@@ -80,7 +80,7 @@ class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAf
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
     inputWikiDump = "src/test/resources/enwiki-pages-redirects.xml"
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==2)
 
@@ -98,7 +98,7 @@ class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAf
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     val totalLinks = wikipediaParser.getSfURI().map(row => row._3).collect().toList.size
 
@@ -126,7 +126,7 @@ class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAf
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser("src/test/resources/enwiki-pages-anarchism.xml",lang)
+    val wikipediaParser = new JsonPediaParser("src/test/resources/enwiki-pages-anarchism.xml", lang, true)
 
 
     val wikiText = wikipediaParser.getArticleText().map(r => r._2).first().toString

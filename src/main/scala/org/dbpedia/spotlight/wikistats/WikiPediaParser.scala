@@ -19,7 +19,7 @@ package org.dbpedia.spotlight.wikistats
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
-import org.dbpedia.spotlight.model.TokenType
+import org.dbpedia.spotlight.model.{SurfaceFormOccurrence, TokenType}
 
 /*
 WikiPedia Parser trait which can be extended to include any parsers
@@ -37,7 +37,7 @@ trait WikiPediaParser {
   def getTokensInSfs(allSfs: List[String]): List[TokenType]
 
   //Method to get the wid and article text from dataframe
-  def getArticleText(): RDD[(Long, String, List[(String, Long, String)])]
+  def getArticleText(): RDD[(Long, String, List[(SurfaceFormOccurrence, String, String)])]
 
   //Method to parse XML to JSON and return a Dataframe
   def parseJSON(pageRDDs:RDD[String]): DataFrame
