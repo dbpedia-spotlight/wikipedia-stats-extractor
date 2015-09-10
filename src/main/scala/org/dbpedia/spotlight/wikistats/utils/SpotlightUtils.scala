@@ -14,9 +14,6 @@
  *  limitations under the License.
  */
 
-/*
-Class to serialize the contents used for creating language tokenizer
- */
 package org.dbpedia.spotlight.wikistats.utils
 
 import java.util.Locale
@@ -26,6 +23,9 @@ import org.dbpedia.spotlight.db.tokenize.LanguageIndependentTokenizer
 import collection.mutable
 import org.dbpedia.spotlight.model.TokenType
 
+/*
+Helper Object used during WikiStats counts processing
+ */
 
 object SpotlightUtils extends Serializable{
 
@@ -50,8 +50,8 @@ object SpotlightUtils extends Serializable{
 
   /*
  Logic to create the Memory Token Store
-  Input:  - List of all Token types
-  Output: - Memory Store with the Token information
+  @param:  - List of all Token types
+  @return: - Memory Store with the Token information
  */
   def createTokenTypeStore(tokenTypes: List[TokenType]): MemoryTokenTypeStore =  {
 
@@ -75,8 +75,8 @@ object SpotlightUtils extends Serializable{
   /*
       Logic to concatnate two strings with the space. This function is used the reduceByKey operation
       to contact two paragraphs.
-      Input:  - Two Strings to concatenate
-      Output: - Concatenated String with Space
+      @param:  - Two Strings to concatenate
+      @return: - Concatenated String with Space
   */
 
 
@@ -89,8 +89,8 @@ object SpotlightUtils extends Serializable{
   /*
     Logic to counts the Tokens in a List
     to contact two paragraphs.
-    Input:  - List of tokens
-    Output: - List of tokens, count
+    @param:  - List of tokens
+    @return: - List of tokens, count
   */
 
   def countTokens(tokens: List[String]): List[(String,Int)] = {
@@ -102,7 +102,7 @@ object SpotlightUtils extends Serializable{
          tokenMap.put(token, value + 1)
       }
       else
-         tokenMap.put(token,1)
+        tokenMap.put(token,1)
     })
 
     tokenMap.toList
@@ -111,13 +111,24 @@ object SpotlightUtils extends Serializable{
   /*
   Below logic is to merge two lists to be used by reduceByKey operation
    */
-  def addingTuples(t1: List[(String, String, Int)], t2: List[(String, String, Int)]): List[(String, String, Int)] = {
 
-      t1 ::: t2
+  def addingTuples(t1: List[(String, String, Int)],
+                   t2: List[(String, String, Int)]): List[(String, String, Int)] = {
+
+     t1 ::: t2
   }
 
 }
 
 
-case class SfDataElement(uri: String, sf: String, offset: Int)
+/*
+Case classes for reading from the Dataframe Row
+ */
+
+case class Span(desc : String, end: Long, id: String, start: Long)
+
+case class ArticleRow(wid: Long, wikiText: String, articleType: String, spans: Seq[Span])
+
+
+
 

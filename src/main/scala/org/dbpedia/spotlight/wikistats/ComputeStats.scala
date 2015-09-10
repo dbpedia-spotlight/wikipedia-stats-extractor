@@ -33,16 +33,18 @@ import org.dbpedia.spotlight.db.stem.SnowballStemmer
 
 /*
 Class for computing various like uri, surface form and token Statistics on wikipedia dump
+@params - Wikipedia language, Spark and SQL Context for executing Spark code
  */
 
-class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
+class ComputeStats(lang: String) (implicit val sc: SparkContext,
+                                  implicit val sqlContext: SQLContext){
 
 
   /*
   Encapsulated Method to get the list of surface forms as an RDD from the FSA Spotter
    */
 
-  def buildCounts(wikipediaParser: JsonPediaParser): (DataFrame, DataFrame)={
+  def spotSfsInWiki(wikipediaParser: JsonPediaParser): RDD[(Long, String, Int)] ={
 
     val allSfs = wikipediaParser.getSfs().collect().toList
 
@@ -68,15 +70,11 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
     //Get wid and articleText for FSA spotter
     val textIdRDD = wikipediaParser.getArticleText()
 
-    //textIdRDD.foreach(println)
-    //Implementing the FSA Spotter logic
-
-    //Declaring value for avoiding the whole class to be serialized
+    //Declaring language value for avoiding the whole class to be serialized
     val language = lang
 
-    import sqlContext.implicits._
     //Logic to get the Surface Forms from FSA Spotter
-    val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
+    val spotterSfsRDD = textIdRDD.mapPartitions(textIds => {
 
       val stemmer = new Stemmer()
       val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
@@ -86,33 +84,46 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
           stemmer))
 
       textIds.map(textId => {
-        allOccFSASpotter.extract(textId._2)
-          .map(sfOffset => (textId._1,sfOffset._1))
+        val spots = textId._3.map(sfOcc => sfOcc._1).toList
+
+        //Calling the Spotter logic to extract the surface forms from the article text
+        allOccFSASpotter.extract(textId._2,spots)
+          .map(sf => {
+          (textId._1,sf._1,sf._2)
+        })
 
       })
         .flatMap(idSf => idSf)
     })
 
-    /*
-    Creating two surface form dataframes for computing various counts
-     */
+    spotterSfsRDD
+  }
 
-    val totalSfDf = totalSfsRDD.toDF("wid", "sf2")
+  /*
+  Method to create two surface form Dfs to be used for the Wiki Counts
+  @param:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
+  @return: - Joined Dataframe
+ */
+
+  def setupJoinDfs(wikipediaParser: JsonPediaParser,
+                   spotterSfsRDD: RDD[(Long, String, Int)]): (DataFrame, DataFrame) ={
+
+    import sqlContext.implicits._
+    val totalSfDf = spotterSfsRDD.toDF("wid", "sf2", "offset")
     val uriSfDf = wikipediaParser.getSfURI().toDF("wid", "sf1", "uri")
 
     (totalSfDf.persist(StorageLevel.MEMORY_AND_DISK),uriSfDf.persist(StorageLevel.MEMORY_AND_DISK))
   }
 
-
   /*
   Method to join the surface form dataframes for URI and Pari counts
-  Input:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
-  Output: - Joined Dataframe
+  @param:  - WikiParser, Sf dataframe from Spotter, Sf from wikidump
+  @return: - Joined Dataframe
  */
 
-  def joinSfDF(wikipediaParser:JsonPediaParser,
-               totalSfDf:DataFrame,
-               uriSfDf:DataFrame): DataFrame = {
+  def joinSfDF(wikipediaParser: JsonPediaParser,
+               totalSfDf: DataFrame,
+               uriSfDf: DataFrame): DataFrame = {
 
     import sqlContext.implicits._
 
@@ -126,8 +137,17 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute URI Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the Uris and count
+    @param:  - Dataframe with the Uri and Surface form information
+    @return: - RDD of    URI  and its Counts in the whole wiki
+
+
+    Example
+
+    DBpedia URI                             Count
+    --------------------------------------------------------------
+    http://en.dbpedia.org/resource/1        21
+    http://en.dbpedia.org/resource/7        7
+    http://en.dbpedia.org/resource/C        20
    */
 
   def computeUriCounts(joinedDf: DataFrame): RDD[(String, Long)] = {
@@ -142,17 +162,27 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
       .map(row => {
       (row.getString(0),row.getLong(1))
     })
+      .filter(row => row._1.length > 0)
       .mapPartitions(uris => {
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
+      //val dbpediaEncode = new DBpediaUriEncode(language)
+      //uris.map(uri => (dbpediaEncode.uriEncode(uri._1),uri._2))
+      uris.map(uri => (uri._1,uri._2))
 
     })
   }
 
   /*
     Method to compute Pair Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the Uris and Surface form counts
+    @param:  - Dataframe with the Uri and Surface form information
+    @return: - RDD of   (Surface Form, Uri, Count of Surface Form and Uri Combination)
+
+    Example
+
+    Surface form     DBpedia URI                                         Count
+    ----------------------------------------------------------------------------
+    Berlin           http://en.dbpedia.org/resource/Brent_Berlin         2
+    Berlin           http://en.dbpedia.org/resource/Trams_in_Berlin      9
+    Berlin           http://en.dbpedia.org/resource/Berlin_(Seedorf)     1
    */
 
   def computePairCounts(joinedDf: DataFrame): RDD[(String, String, Long)] =  {
@@ -167,20 +197,30 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
       .map(row => {
       (row.getString(0),row.getString(1),row.getLong(2))
     })
+      .filter(row => row._2.length > 0)
       .mapPartitions(urisfs => {
-      val dbpediaEncode = new DBpediaUriEncode(language)
-      urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
-
+      //val dbpediaEncode = new DBpediaUriEncode(language)
+      //urisfs.map(urisf => (urisf._1,dbpediaEncode.uriEncode(urisf._2),urisf._3))
+      urisfs.map(urisf => (urisf._1,urisf._2,urisf._3))
     })
   }
 
   /*
     Method to compute total Surface form Counts on the WikiDump
-    Input:  - Dataframe with the Uri and Surface form information
-    Output: - RDD with the surface forms, annotated counts and total counts
+    @param:  - Dataframe with the Uri and Surface form information
+    @return: - RDD of (Surface form, nbr of times the surface form annotated
+                                   ,total nbr of times Surface form in the whole corpus)
+
+    Example
+
+    Surface form         Count annotated    Count total
+    --------------------------------------------------------------
+    Berlin               49068              105915
+    Berloz               2                  6
+    9z                   -1                 1
    */
 
-  def computeTotalSfs(totalSfDf: DataFrame, uriSfDf:DataFrame): RDD[(String,Long,Any)] = {
+  def computeTotalSfs(totalSfDf: DataFrame, uriSfDf: DataFrame): RDD[(String, Long, Any)] = {
 
     //Surface Form Counts Logic
     val sfAnnotatedCounts = uriSfDf
@@ -216,13 +256,20 @@ class ComputeStats(lang: String) (implicit val sc: SparkContext,implicit val sql
 
   /*
     Method to compute total Surface form Counts on the WikiDump
-    Input:  - RDD with uri and the paragraphs where it is annotated
-    Output: - RDD with uri and Tokens
+    @param:  - RDD with URI and the paragraphs where it is annotated
+    @return: - RDD with URI and Tokens associated
+
+    Example
+
+    Wikipedia URI                   Stemmed token counts
+    ----------------------------------------------------------------------------
+    http://en.wikipedia.org/wiki/!  {(renam,76),(intel,14),...,(plai,2),(auf,2)}
+
    */
 
-  def computeTokenCounts(uriParaText: RDD[(String,String)],
+  def computeTokenCounts(uriParaText: RDD[(String, String)],
                          stopWordLoc: String,
-                         stemmerString: String): RDD[(String,String)] = {
+                         stemmerString: String): RDD[(String, String)] = {
 
     import sqlContext.implicits._
 

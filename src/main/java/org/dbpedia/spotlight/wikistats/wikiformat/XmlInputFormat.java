@@ -69,10 +69,12 @@ public class XmlInputFormat extends TextInputFormat {
         private final DataOutputBuffer buffer = new DataOutputBuffer();
         private LongWritable currentKey;
         private Text currentValue;
+        private String wikiLang;
 
         public XmlRecordReader(FileSplit split, Configuration conf) throws IOException {
             startTag = conf.get(START_TAG_KEY).getBytes(StandardCharsets.UTF_8);
             endTag = conf.get(END_TAG_KEY).getBytes(StandardCharsets.UTF_8);
+            wikiLang = conf.get(LANG);
 
             // open the file and seek to the start of the split
             start = split.getStart();
@@ -149,7 +151,7 @@ public class XmlInputFormat extends TextInputFormat {
             Below Logic for calling JSON-WikiPedia for every XML article parsed
             from the Raw wikipedia dump
              */
-            JsonWikiParser jsonWikiParser = new JsonWikiParser(currentValue.toString(), "en");
+            JsonWikiParser jsonWikiParser = new JsonWikiParser(currentValue.toString(), wikiLang);
             try {
                 return new Text(jsonWikiParser.jsonParser());
             }

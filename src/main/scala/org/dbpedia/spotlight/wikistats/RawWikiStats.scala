@@ -17,17 +17,26 @@
 
 package org.dbpedia.spotlight.wikistats
 
+import java.util.Calendar
+
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.{AllOccurrencesFSASpotter, FSASpotter}
 import org.dbpedia.spotlight.db.model.Stemmer
-import org.dbpedia.spotlight.wikistats.utils.{SfDataElement, SpotlightUtils}
+import org.dbpedia.spotlight.wikistats.util.DBpediaUriEncode
+import org.dbpedia.spotlight.wikistats.utils.SpotlightUtils
+import scala.collection.JavaConversions._
+import scala.collection.mutable.HashMap
 
+/*
+Class to replace the Surface forms with the dbpedia Uri in the article text
+
+ */
 
 class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sqlContext: SQLContext){
 
-  def buildRawWiki(wikipediaParser: JsonPediaParser): Unit = {
+  def buildRawWiki(wikipediaParser: JsonPediaParser): RDD[String] = {
 
     val allSfs = wikipediaParser.getSfs().collect().toList
 
@@ -50,18 +59,24 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
     val fsaDict = FSASpotter.buildDictionaryFromIterable(allSfs,lit)
     val fsaDictBc = sc.broadcast(fsaDict)
 
+    //Constructing Redirects Broadcast HashMap
+    val redirectsRdd = wikipediaParser.constructResolvedRedirects()
+
+    var redirectsMap = sc.accumulableCollection(HashMap[String, String]())
+    redirectsRdd.foreach(row => {redirectsMap += row._1.toLowerCase -> row._2})
+
+    val redirectsMapBc = sc.broadcast(redirectsMap.value)
     //Get wid and articleText for FSA spotter
+
     val textIdRDD = wikipediaParser.getArticleText()
 
-    //textIdRDD.persist(StorageLevel.MEMORY_AND_DISK)
     //Implementing the FSA Spotter logic
 
     //Declaring value for avoiding the whole class to be serialized
     val language = lang
 
-    import sqlContext.implicits._
     //Logic to get the Surface Forms from FSA Spotter
-    val totalSfsRDD = textIdRDD.mapPartitions(textIds => {
+    val spotterSfsRDD = textIdRDD.mapPartitions(textIds => {
 
       val stemmer = new Stemmer()
       val allOccFSASpotter = new AllOccurrencesFSASpotter(fsaDictBc.value,
@@ -70,45 +85,39 @@ class RawWikiStats (lang: String) (implicit val sc: SparkContext,implicit val sq
           " ",
           stemmer))
 
-      textIds.map(textId => {
-        allOccFSASpotter.extract(textId._2)
-          .map(sfOffset => (textId._1,sfOffset._1,sfOffset._2))
+      val dbpediaEncode = new DBpediaUriEncode(language)
 
+      textIds.map(textId => {
+
+        val sfMap = textId._3.map(s => {
+          (s._2 -> s._3)
+        }).toMap
+
+        val spots = textId._3.map(s => s._1).toList
+
+        val spotterSfs = allOccFSASpotter.extract(textId._2, spots)
+                                         .filter(sf => sfMap.contains(sf._1))
+                                         .map(sf => (sf._1, sf._2, sfMap(sf._1)))
+
+        //Storing the article text in a String Builder for replacing the sfs with dbpedia entities
+        val changedArticleText = new StringBuilder(textId._2)
+        var changeOffset = 0
+
+        //Going through all the Sfs and replacing in the raw text
+
+        spotterSfs.foreach(sf => {
+          val redirectLink = if (redirectsMapBc.value.contains(sf._3.toLowerCase))
+                                 redirectsMapBc.value(sf._3.toLowerCase).toString
+                             else sf._3.toString
+
+          val linkToReplace = " " + dbpediaEncode.uriEncode(redirectLink) + " "
+          changedArticleText.replace(sf._2 + changeOffset,sf._2 + sf._1.length + changeOffset, linkToReplace)
+          changeOffset += linkToReplace.length - sf._1.length
+        })
+        changedArticleText.toString()
       })
-        .flatMap(idSf => idSf)
     })
 
-    /*
-    Creating two surface form dataframes for finding the URI for the corresponding Sf
-    */
-
-    val totalSfDf = totalSfsRDD.toDF("wid2", "sf2","offset")
-    val uriSfDf = wikipediaParser.getSfURI().toDF("wid1", "sf1", "uri")
-
-
-
-    import sqlContext.implicits._
-
-    //Joining to obtain the WikiId and the list of all surface forms obtained in the list
-
-    val joinedDf = uriSfDf.join(totalSfDf,(uriSfDf("wid1") === totalSfDf("wid2"))
-      && (uriSfDf("sf1") === totalSfDf("sf2")),joinType = "inner")
-      .select("wid1","uri","sf1","offset")
-      .rdd
-      .map(row => (row.getLong(0),List((row.getString(1),row.getString(2),row.getInt(3)))))
-      .reduceByKey(SpotlightUtils.addingTuples)
-      .toDF("wid1","Sfs")
-
-    val wikiTextDf = textIdRDD.toDF("wid","wikiText")
-
-
-    joinedDf.join(wikiTextDf,(joinedDf("wid1") === wikiTextDf("wid")))
-            .select("wikiText","Sfs")
-            .rdd
-            //.map(row => (row.getString(0),row.getList[(String, String, Int)](1).toArray.sortBy()))
-            .collect().foreach(println)
-
-
+    spotterSfsRDD
   }
-
 }

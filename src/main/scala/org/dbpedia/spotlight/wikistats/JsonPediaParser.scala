@@ -28,8 +28,8 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.db.model.Stemmer
 import org.dbpedia.spotlight.db.tokenize.LanguageIndependentStringTokenizer
-import org.dbpedia.spotlight.model.TokenType
-import org.dbpedia.spotlight.wikistats.utils.{SpotlightUtils, RedirectUtil}
+import org.dbpedia.spotlight.model._
+import org.dbpedia.spotlight.wikistats.utils._
 import org.dbpedia.spotlight.wikistats.wikiformat.XmlInputFormat
 import scala.collection.JavaConversions._
 import scala.collection.mutable.HashMap
@@ -39,19 +39,25 @@ Class to Parse the Raw WikiPedia dump into individual JSON format articles
 Member variables -  1. Input Wikipedia Dump Path
                     2. Language of the Wikipedia dump
  */
-class JsonPediaParser(inputWikiDump: String, lang: String)
-                     (implicit val sc: SparkContext,implicit val sqlContext: SQLContext)
+
+
+class JsonPediaParser(inputWikiDump: String,
+                      lang: String,
+                      jsonParsing: Boolean)
+                     (implicit val sc: SparkContext, implicit val sqlContext: SQLContext)
   extends WikiPediaParser{
 
 
-  val pageRDDs = parse(inputWikiDump).persist(StorageLevel.MEMORY_AND_DISK)
+  val pageRDDs = if (jsonParsing) parse(inputWikiDump).persist(StorageLevel.DISK_ONLY)
+                 else sc.textFile(inputWikiDump)
   val dfWikiRDD = parseJSON(pageRDDs)
 
   /*
     Method to Begin the Parsing Logic
-    Input:  - RDD of Individual article in JSON format
-    Output: - Dataframe of the input RDD
+    @param:  - RDD of Individual article in JSON format
+    @return: - Dataframe of the input RDD
    */
+
   def parseJSON(pageRDDs: RDD[String]): DataFrame ={
 
     //Create Initial DataFrame by Parsing using JSONRDD. This is from Spark 1.3 onwards
@@ -61,9 +67,10 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   /*
     Method to parse the XML dump into JSON
-    Input:  - Path of the Wikipedia dump
-    Output: - RDD of Individual article in JSON format
+    @param:  - Path of the Wikipedia dump
+    @return: - RDD of Individual article in JSON format
  */
+
   def parse(path: String): RDD[String] = {
 
     val conf = new Configuration()
@@ -72,7 +79,8 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
     conf.set(XmlInputFormat.START_TAG_KEY, "<page>")
     conf.set(XmlInputFormat.END_TAG_KEY, "</page>")
     conf.set(XmlInputFormat.LANG,lang)
-    conf.set("dfs.block.size","134217728")
+    conf.set("mapreduce.input.fileinputformat.split.maxsize", "200000000")
+    conf.set("mapreduce.input.fileinputformat.split.minsize", "199999999")
 
     val rawXmls = sc.newAPIHadoopFile(path, classOf[XmlInputFormat], classOf[LongWritable],
       classOf[Text], conf)
@@ -82,9 +90,10 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   /*
     Get Redirects from the wiki dump
-    Input:   - Base dataframe consiting of wiki data
-    Output:  - RDD with Redirect source and target
+    @param:   - Base dataframe consiting of wiki data
+    @return:  - RDD with Redirect source and target
    */
+
   def redirectsWikiArticles(): RDD[(String, String)] = {
 
     dfWikiRDD.select("wikiTitle","type","redirect")
@@ -96,13 +105,14 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   /*
     Method to resolve transitive dependencies for the redirects.
-    Input:  - None
-    Output: - RDD with the resolved wiki uri and surface form
+    @param:  - None
+    @return: - RDD with the resolved wiki uri and surface form
    */
+
   def getResolveRedirects(): RDD[(String, String)] = {
 
     val rddRedirects = redirectsWikiArticles()
-    var linkMap = sc.accumulableCollection(HashMap[String,String]())
+    var linkMap = sc.accumulableCollection(HashMap[String, String]())
 
     rddRedirects.foreach(row => {linkMap += (row._1 -> row._2)})
 
@@ -111,48 +121,87 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
     rddRedirects.mapPartitions(rows => {
       val redirectUtil = new RedirectUtil(mapBc.value)
-      rows.map { row => (redirectUtil.getEndOfChainURI(row._1),row._1)
+      rows.map { row => (redirectUtil.getEndOfChainURI(row._1), row._1)
       }})
 
   }
 
   /*
-     Method to Get the list of Surface forms from the wiki
-    Input:  - None
-    Output: - RDD of all Surface forms from the wikipedia dump
+  Construct the Redirects HashMap for resolving the redirects
    */
+
+  def constructResolvedRedirects(): RDD[(String, String)] = {
+
+    val rddRedirects = redirectsWikiArticles()
+    var linkMap = sc.accumulableCollection(HashMap[String, String]())
+
+    rddRedirects.foreach(row => {linkMap += (row._1 -> row._2)})
+
+    val mapBc = sc.broadcast(linkMap.value)
+
+    rddRedirects.mapPartitions(rows => {
+      val redirectUtil = new RedirectUtil(mapBc.value)
+      rows.map { row => (row._1 , redirectUtil.getEndOfChainURI(row._1))
+      }})
+  }
+  /*
+     Method to Get the list of Surface forms from the wiki
+    @param:  - None
+    @return: - RDD of all Surface forms from the wikipedia dump
+   */
+
   def getSfs() : RDD[String] = {
 
+    import sqlContext.implicits._
     dfWikiRDD.select("wid","links.description","type")
       .rdd
       .filter(row => row.getString(2)== "ARTICLE")
       .map(artRow => artRow.getList[String](1))
       .flatMap(sf => sf)
+      .toDF("sf")
+      .select("sf")
+      .distinct
+      .rdd
+      .map(row => row.getString(0))
   }
 
   /*
   Method to get the wid and article text from the wiki dump
-    Input:  - None
-    Output: - RDD of all wikiId and the article text
+    @param:  - None
+    @return: - RDD of (wikiId, Article Text, List of Surface Form Occurrence for Spotter)
    */
-  def getArticleText(): RDD[(Long, String)] = {
 
-    dfWikiRDD.select("wid","wikiText","type")
-      .distinct
+  def getArticleText(): RDD[(Long, String, List[(SurfaceFormOccurrence, String, String)])] = {
+
+
+    dfWikiRDD.select("wid","wikiText","type","links")
       .rdd
-      .filter(row => row.getString(2)== "ARTICLE")
-      .map(artRow => {
-      (artRow.getLong(0),artRow.getString(1))
-    })
-      .filter(artRow => artRow._2.length > 0)
+      .filter(row => row.getString(2) == "ARTICLE" )
+      .filter(row => row.getString(1).length > 0)
+      .map{row => ArticleRow(row.getLong(0),
+      row.getString(1),
+      row.getString(2),
+      row.getAs[Seq[Row]](3).map(r => Span(r.getString(0),r.getLong(3),r.getString(2),r.getLong(3))))
+    }
+      .map(r => {val articleText = new org.dbpedia.spotlight.model.Text(r.wikiText)
+
+      (r.wid,r.wikiText,r.spans.map{s =>
+        val spot = new SurfaceFormOccurrence(new SurfaceForm(s.desc),
+          articleText,
+          s.start.toInt,
+          Provenance.Annotation,
+          -1)
+        spot.setFeature(new Nominal("spot_type", "real"))
+        (spot, s.desc, s.id)}.toList)})
   }
 
   /*
    Logic to Get Surface Forms and URIs from the wikiDump
-    Input:  - None
-    Output: - RDD of wiki-id, surface forms and uri
+    @param:  - None
+    @return: - RDD of wiki-id, surface forms and uri
    */
-  def getSfURI(): RDD[(Long,String, String)]= {
+
+  def getSfURI(): RDD[(Long, String, String)]= {
 
     dfWikiRDD.select(new Column("wid"),new Column("type"),explode( new Column("links")).as("link"))
       .select("type","wid","link.description","link.end","link.id","link.start")
@@ -165,11 +214,11 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   /*
    Logic to get Links and paragraph text as RDD
-    Input:  - None
-    Output: - RDD with the paragraph links and the text
+    @param:  - None
+    @return: - RDD with the paragraph links and the text
    */
 
-  def getUriParagraphs(): RDD[(String,String)] = {
+  def getUriParagraphs(): RDD[(String, String)] = {
 
     import org.apache.spark.sql.functions._
 
@@ -184,8 +233,8 @@ class JsonPediaParser(inputWikiDump: String, lang: String)
 
   /*
    Logic to get the list of all the tokens in the Surface forms
-    Input:  - None
-    Output: - List of different token types
+    @param:  - None
+    @return: - List of different token types
    */
 
   def getTokensInSfs(allSfs: List[String]): List[TokenType] ={

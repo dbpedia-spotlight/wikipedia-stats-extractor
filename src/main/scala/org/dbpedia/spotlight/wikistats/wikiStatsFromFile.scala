@@ -22,10 +22,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
 
 /*
-Entry point for WikiStats Code Execution
+Entry point for WikiStats for generating counts when the JSON wiki dump is passed instead of the Raw wiki XML
  */
 
-object main {
+object wikiStatsFromFile {
 
   def main(args: Array[String]): Unit ={
 
@@ -48,7 +48,7 @@ object main {
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,
                                               lang,
-                                              true)
+                                              false)
 
     //Logic to calculate various counts
     val computeStats = new ComputeStats(lang)
@@ -64,18 +64,18 @@ object main {
 
     //Uri Counts
     computeStats.computeUriCounts(joinedDfPersist)
-                .map(line => line._1 + "\t" + line._2)
-                .saveAsTextFile(outputPath + "UriCounts")
+      .map(line => line._1 + "\t" + line._2)
+      .saveAsTextFile(outputPath + "UriCounts")
 
     //Pair Counts
     computeStats.computePairCounts(joinedDfPersist)
-                .map(line => line._1 + "\t" + line._2 + "\t" + line._3)
-                .saveAsTextFile(outputPath + "PairCounts")
+      .map(line => line._1 + "\t" + line._2 + "\t" + line._3)
+      .saveAsTextFile(outputPath + "PairCounts")
 
     //Total Surface Form counts
     computeStats.computeTotalSfs(sfDfs._1, sfDfs._2)
-                .map(line => line._1 + "\t" + line._2 + "\t" + line._3)
-                .saveAsTextFile(outputPath + "TotalSfCounts")
+      .map(line => line._1 + "\t" + line._2 + "\t" + line._3)
+      .saveAsTextFile(outputPath + "TotalSfCounts")
 
     //Token Counts
     computeStats.computeTokenCounts(wikipediaParser.getUriParagraphs(),stopWordLoc,stemmerString)

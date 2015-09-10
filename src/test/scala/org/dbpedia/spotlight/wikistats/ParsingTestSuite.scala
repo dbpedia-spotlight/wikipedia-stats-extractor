@@ -18,7 +18,6 @@ package scala.org.dbpedia.spotlight.wikistats
 
 
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.storage.StorageLevel
 import org.dbpedia.spotlight.wikistats.{ComputeStats, SharedSparkContext, JsonPediaParser}
 import org.scalatest.{BeforeAndAfter, FunSuite}
 
@@ -27,7 +26,7 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 Test Suite for testing the Spark Application funtionality
  */
 
-class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
+class ParsingTestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
 
   /*
   Declaring common variables used across all the test cases
@@ -49,7 +48,7 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     wikipediaParser.getSfs().collect().toList.foreach(sf => assert(!sf.isEmpty))
 
@@ -60,7 +59,7 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==10)
   }
@@ -70,7 +69,7 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==10)
   }
@@ -81,7 +80,7 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
     inputWikiDump = "src/test/resources/enwiki-pages-redirects.xml"
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     assert(wikipediaParser.redirectsWikiArticles().map(row => row._1).count()==2)
 
@@ -99,13 +98,14 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     implicit val sc = sc_implicit
     implicit val sqlContext = new SQLContext(sc)
 
-    val wikipediaParser = new JsonPediaParser(inputWikiDump,lang)
+    val wikipediaParser = new JsonPediaParser(inputWikiDump, lang, true)
 
     val totalLinks = wikipediaParser.getSfURI().map(row => row._3).collect().toList.size
 
     val computeStats = new ComputeStats(lang)
 
-    val sfDfs = computeStats.buildCounts(wikipediaParser)
+    val spotterSfsRDD = computeStats.spotSfsInWiki(wikipediaParser)
+    val sfDfs = computeStats.setupJoinDfs(wikipediaParser, spotterSfsRDD)
 
     var annotatedCounts = 0l
     computeStats.computeTotalSfs(sfDfs._1,sfDfs._2)
@@ -120,5 +120,24 @@ class TestSuite extends FunSuite with SharedSparkContext with BeforeAndAfter{
     assert(totalLinks==annotatedCounts)
   }
 
+
+  //Test case for verifying the spotter sfs
+  test("Spotter Sfs"){
+    implicit val sc = sc_implicit
+    implicit val sqlContext = new SQLContext(sc)
+
+    val wikipediaParser = new JsonPediaParser("src/test/resources/enwiki-pages-anarchism.xml", lang, true)
+
+
+    val wikiText = wikipediaParser.getArticleText().map(r => r._2).first().toString
+
+    val computeStats = new ComputeStats(lang)
+
+    val spotterSfsRDD = computeStats.spotSfsInWiki(wikipediaParser).collect()
+    spotterSfsRDD.foreach(sf => {
+      assert(wikiText.substring(sf._3,sf._3 + sf._2.length) == sf._2)
+    })
+
+  }
 
 }

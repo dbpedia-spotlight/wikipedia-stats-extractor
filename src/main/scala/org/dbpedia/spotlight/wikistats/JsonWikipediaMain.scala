@@ -17,14 +17,14 @@
 
 package org.dbpedia.spotlight.wikistats
 
-import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
+import org.apache.spark.{SparkConf, SparkContext}
 
 /*
-Entry point for Raw Wiki text
+Entry point to generate JSON formated wikipedia dump
  */
 
-object rawWikiMain {
+object jsonWikipediaMain {
 
   def main(args: Array[String]): Unit = {
 
@@ -33,7 +33,8 @@ object rawWikiMain {
     val lang = args(1)
     val outputPath = args(2)
 
-    val sparkConf = new SparkConf().setAppName("RawWikiText")
+    val sparkConf = new SparkConf()
+      .setAppName("JsonWikiPedia")
 
     implicit val sc = new SparkContext(sparkConf)
 
@@ -41,15 +42,13 @@ object rawWikiMain {
     implicit val sqlContext = new SQLContext(sc)
 
     /*
-    Parsing and Processing Starts from here
+    Parsing Starts from here
      */
     val wikipediaParser = new JsonPediaParser(inputWikiDump,
                                               lang,
                                               true)
 
-    val rawWikiStats = new RawWikiStats(lang)
-
-    rawWikiStats.buildRawWiki(wikipediaParser).saveAsTextFile(outputPath + "RawWiki")
+    wikipediaParser.pageRDDs.saveAsTextFile(outputPath + "Jsonpedia")
     sc.stop()
   }
 
